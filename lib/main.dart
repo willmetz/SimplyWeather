@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ost_weather/Bloc/LocationBloc.dart';
 import 'package:ost_weather/Bloc/bloc_provider.dart';
 import 'package:ost_weather/UI/MainScreen.dart';
+import 'package:ost_weather/UI/Widgets/CurrentConditionsWidget.dart';
 
 void main() => runApp(MyApp());
 
@@ -30,7 +31,10 @@ class MyApp extends StatelessWidget {
           home: FutureBuilder<bool>(
             future: bloc.initLocation(),
             builder: (context, AsyncSnapshot<bool> snapshot) {
-              return MainScreen();
+              //return MainScreen();
+              return Scaffold(
+                body: CurrentConditionsWidget(),
+              );
             },
             //child: MainScreen()),
           ),
