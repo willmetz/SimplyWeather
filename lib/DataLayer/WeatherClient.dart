@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:ost_weather/DataLayer/DailyForecast.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart' show rootBundle;
 
 class WeatherClient {
   final _path = "/data/2.5";
@@ -20,5 +21,11 @@ class WeatherClient {
     } else {
       throw Exception("Failed to get weather: ${response.reasonPhrase}");
     }
+  }
+
+  Future<DailyForecast> getForecastFromFile() async {
+    String weather = await rootBundle.loadString('assets/weather.json');
+
+    return DailyForecast.fromJson(json.decode(weather));
   }
 }

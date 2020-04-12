@@ -32,11 +32,17 @@ class DailyForecast {
 class ForecastInterval {
   ForecastInterval(this.periodStartTimestamp, this.weather, this.weatherReadings);
 
+  @JsonKey(name: 'dt')
+  int timeStampUTC;
+
   @JsonKey(name: 'main')
   WeatherReadings weatherReadings;
 
   @JsonKey(name: 'weather')
-  Weather weather;
+  List<Weather> weather;
+
+  @JsonKey(name: "wind")
+  WindDetails windDetails;
 
   @JsonKey(name: 'dt_txt', defaultValue: "")
   String periodStartTimestamp;
@@ -68,7 +74,7 @@ class WeatherReadings {
   @JsonKey(name: 'humidity', defaultValue: 0)
   double humidity;
 
-  @JsonKey(name: 'feelsLike', defaultValue: 0)
+  @JsonKey(name: 'feels_like', defaultValue: 0)
   double feelsLike;
 
   /// A necessary factory constructor for creating a new User instance
@@ -84,13 +90,16 @@ class WeatherReadings {
 
 @JsonSerializable()
 class Weather {
-  Weather(this.condition, this.description);
+  Weather(this.condition, this.description, this.imageCode);
 
   @JsonKey(name: 'main', defaultValue: "")
   String condition;
 
   @JsonKey(name: 'description', defaultValue: "")
   String description;
+
+  @JsonKey(name: 'icon', defaultValue: "")
+  String imageCode;
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$WeatherFromJson()` constructor.
@@ -122,4 +131,25 @@ class LocationInformation {
   /// to JSON. The implementation simply calls the private, generated
   /// helper method `_$LocationInformationToJson`.
   Map<String, dynamic> toJson() => _$LocationInformationToJson(this);
+}
+
+@JsonSerializable()
+class WindDetails {
+  @JsonKey(name: 'speed')
+  double windSpeed;
+
+  @JsonKey(name: 'deg')
+  double windDirection;
+
+  WindDetails(this.windDirection, this.windSpeed);
+
+  /// A necessary factory constructor for creating a new User instance
+  /// from a map. Pass the map to the generated `_$WindDetailsFromJson()` constructor.
+  /// The constructor is named after the source class, in this case, User.
+  factory WindDetails.fromJson(Map<String, dynamic> json) => _$WindDetailsFromJson(json);
+
+  /// `toJson` is the convention for a class to declare support for serialization
+  /// to JSON. The implementation simply calls the private, generated
+  /// helper method `_$WindDetailsToJson`.
+  Map<String, dynamic> toJson() => _$WindDetailsToJson(this);
 }

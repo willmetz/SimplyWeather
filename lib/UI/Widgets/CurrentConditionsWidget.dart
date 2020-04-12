@@ -1,7 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ost_weather/Bloc/HomeBloc.dart';
 
 class CurrentConditionsWidget extends StatelessWidget {
+  final HomeData homeData;
+
+  CurrentConditionsWidget(this.homeData);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,12 +27,12 @@ class CurrentConditionsWidget extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Container(padding: EdgeInsets.fromLTRB(0, 0, 0, 5), child: Text("66\u00b0")),
+                            Container(padding: EdgeInsets.fromLTRB(0, 0, 0, 5), child: Text("${homeData.currentTemperature}\u00b0")),
                             Container(
-                              child: Text("10 mph"),
+                              child: Text("${homeData.currentWindSpeed} mph"),
                               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                             ),
-                            Text("Cloudy")
+                            Text(homeData.currentConditionsDescription)
                           ],
                         ),
                       ),
@@ -36,7 +41,7 @@ class CurrentConditionsWidget extends StatelessWidget {
                       flex: 1,
                       child: Center(
                           child: CachedNetworkImage(
-                        imageUrl: "http://openweathermap.org/img/w/10d.png",
+                        imageUrl: homeData.currentConditionsImageUrl,
                         height: 150,
                         width: 150,
                         fit: BoxFit.fitWidth,
@@ -56,13 +61,13 @@ class CurrentConditionsWidget extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     child: Text(
-                      "Feels Like: 60\u00b0",
+                      "Feels Like: ${homeData.feelsLikeTemperature}\u00b0",
                       style: TextStyle(fontSize: 15),
                       textAlign: TextAlign.end,
                     ),
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                   ),
-                  Text("50\u00b0/60\u00b0")
+                  Text("${homeData.lowForDay}\u00b0/${homeData.hiForDay}\u00b0")
                 ],
               ),
             ),
