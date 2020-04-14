@@ -21,13 +21,19 @@ class HomeScreen extends StatelessWidget {
                   final HomeData results = snapshot.data;
 
                   if (results == null) {
-                    return Center(
-                      child: Text("No Data yet, make this prettier"),
-                    );
+                    return Container();
                   }
 
                   return Column(
                     children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                        child: Center(
+                            child: Text(
+                          results.city,
+                          style: TextStyle(fontSize: 25),
+                        )),
+                      ),
                       CurrentConditionsWidget(results),
                       Expanded(
                         child: ListView.builder(
