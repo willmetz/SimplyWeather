@@ -4,6 +4,6 @@ class Location {
   Location.allForms(this.zipCode, this.longitude, this.latitude);
 
   int zipCode;
-  int latitude;
-  int longitude;
+  double latitude;
+  double longitude;
 }

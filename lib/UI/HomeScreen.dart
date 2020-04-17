@@ -7,10 +7,14 @@ import 'package:ost_weather/UI/Widgets/CurrentConditionsWidget.dart';
 import 'Widgets/HourlyConditionsCell.dart';
 
 class HomeScreen extends StatelessWidget {
+  final Location _location;
+
+  HomeScreen(this._location);
+
   @override
   Widget build(BuildContext context) {
     final HomeBloc homeBloc = HomeBloc();
-    homeBloc.getCurrentWeather(new Location(12345));
+    homeBloc.getCurrentWeather(_location);
 
     return BlocProvider<HomeBloc>(
         bloc: homeBloc,

@@ -17,7 +17,8 @@ class HomeBloc implements Bloc {
     final DailyForecast forecast = await _client.getForecastFromFile();
 
     //find all forecast details for today
-    final today = DateTime.now();
+    //final today = DateTime.now();
+    final today = DateTime.fromMillisecondsSinceEpoch(forecast.forecastIntervals[0].timeStampUTC * 1000, isUtc: false);
 
     HomeData homeData = HomeData();
     homeData.forecastWindows = new List<ForecastWindow>();
