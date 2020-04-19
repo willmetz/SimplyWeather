@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:ost_weather/Bloc/Bloc.dart';
-import 'package:ost_weather/DataLayer/DailyForecast.dart';
+import 'package:ost_weather/DataLayer/HourlyForecast.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/DataLayer/WeatherClient.dart';
 
@@ -14,7 +14,7 @@ class HomeBloc implements Bloc {
   Stream<HomeData> get stream => _controller.stream;
 
   void getCurrentWeather(Location location) async {
-    final DailyForecast forecast = await _client.getForecastFromFile();
+    final HourlyForecast forecast = await _client.getForecastFromFile();
 
     //find all forecast details for today
     //final today = DateTime.now();

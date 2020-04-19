@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'DailyForecast.dart';
+part of 'HourlyForecast.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DailyForecast _$DailyForecastFromJson(Map<String, dynamic> json) {
-  return DailyForecast(
+HourlyForecast _$HourlyForecastFromJson(Map<String, dynamic> json) {
+  return HourlyForecast(
     json['city'] == null
         ? null
         : LocationInformation.fromJson(json['city'] as Map<String, dynamic>),
@@ -19,7 +19,7 @@ DailyForecast _$DailyForecastFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$DailyForecastToJson(DailyForecast instance) =>
+Map<String, dynamic> _$HourlyForecastToJson(HourlyForecast instance) =>
     <String, dynamic>{
       'list': instance.forecastIntervals,
       'city': instance.locationInformation,

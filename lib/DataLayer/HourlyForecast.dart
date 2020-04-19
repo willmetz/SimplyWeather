@@ -1,15 +1,15 @@
 import 'package:json_annotation/json_annotation.dart';
 
-/// This allows the `User` class to access private members in
+/// This allows the `HourlyForecast` class to access private members in
 /// the generated file. The value for this is *.g.dart, where
 /// the star denotes the source file name.
-part 'DailyForecast.g.dart';
+part 'HourlyForecast.g.dart';
 
 /// An annotation for the code generator to know that this class needs the
 /// JSON serialization logic to be generated.
 @JsonSerializable()
-class DailyForecast {
-  DailyForecast(this.locationInformation, this.forecastIntervals);
+class HourlyForecast {
+  HourlyForecast(this.locationInformation, this.forecastIntervals);
 
   @JsonKey(name: 'list', defaultValue: null)
   List<ForecastInterval> forecastIntervals;
@@ -18,14 +18,14 @@ class DailyForecast {
   LocationInformation locationInformation;
 
   /// A necessary factory constructor for creating a new User instance
-  /// from a map. Pass the map to the generated `_$DailyForecastFromJson()` constructor.
+  /// from a map. Pass the map to the generated `_$HourlyForecastFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.
-  factory DailyForecast.fromJson(Map<String, dynamic> json) => _$DailyForecastFromJson(json);
+  factory HourlyForecast.fromJson(Map<String, dynamic> json) => _$HourlyForecastFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated
-  /// helper method `_$DailyForecastToJson`.
-  Map<String, dynamic> toJson() => _$DailyForecastToJson(this);
+  /// helper method `_$HourlyForecastToJson`.
+  Map<String, dynamic> toJson() => _$HourlyForecastToJson(this);
 }
 
 @JsonSerializable()
