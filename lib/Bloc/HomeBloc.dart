@@ -5,7 +5,7 @@ import 'package:ost_weather/DataLayer/HourlyForecast.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/DataLayer/WeatherClient.dart';
 
-final _imageURLPrefix = "http://openweathermap.org/img/w/";
+final _imageURLPrefix = "https://openweathermap.org/img/w/";
 
 class HomeBloc implements Bloc {
   final _client = WeatherClient();
@@ -14,7 +14,7 @@ class HomeBloc implements Bloc {
   Stream<HomeData> get stream => _controller.stream;
 
   void getCurrentWeather(Location location) async {
-    final HourlyForecast forecast = await _client.getForecastFromFile();
+    final HourlyForecast forecast = await _client.getHourlyForecastFromFile();
 
     //find all forecast details for today
     //final today = DateTime.now();
