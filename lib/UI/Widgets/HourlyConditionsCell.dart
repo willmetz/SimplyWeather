@@ -10,21 +10,24 @@ class HourlyConditionsCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Row(
-        children: <Widget>[
-          Expanded(flex: 1, child: Center(child: Text("${_forecastWindow.windowStartTime.hour} - ${_forecastWindow.windowEndTime.hour}"))),
-          Expanded(flex: 1, child: Center(child: Text("${_forecastWindow.temp}\u00b0"))),
-          Expanded(
-              flex: 1,
-              child: Center(
-                child: CachedNetworkImage(
-                  imageUrl: _forecastWindow.imageUrl,
-                  height: 75,
-                  width: 75,
-                  fit: BoxFit.fitWidth,
-                ),
-              ))
-        ],
+      child: Container(
+        color: Colors.lightBlue,
+        child: Row(
+          children: <Widget>[
+            Expanded(flex: 1, child: Center(child: Text("${_forecastWindow.windowStartTime.hour} - ${_forecastWindow.windowEndTime.hour}"))),
+            Expanded(flex: 1, child: Center(child: Text("${_forecastWindow.temp}\u00b0"))),
+            Expanded(
+                flex: 1,
+                child: Center(
+                  child: CachedNetworkImage(
+                    imageUrl: _forecastWindow.imageUrl,
+                    height: 75,
+                    width: 75,
+                    fit: BoxFit.fitWidth,
+                  ),
+                ))
+          ],
+        ),
       ),
     );
   }

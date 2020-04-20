@@ -28,25 +28,31 @@ class HomeScreen extends StatelessWidget {
                     return Container();
                   }
 
-                  return Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                        child: Center(
-                            child: Text(
-                          results.city,
-                          style: TextStyle(fontSize: 25),
-                        )),
-                      ),
-                      CurrentConditionsWidget(results),
-                      Expanded(
-                        child: ListView.builder(
-                            itemCount: results.forecastWindows.length,
-                            itemBuilder: (context, index) {
-                              return HourlyConditionsCell(results.forecastWindows[index]);
-                            }),
-                      )
-                    ],
+                  return Container(
+                    color: Colors.blue,
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                          child: Center(
+                              child: Text(
+                            results.city,
+                            style: TextStyle(fontSize: 25),
+                          )),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                          child: CurrentConditionsWidget(results),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: results.forecastWindows.length,
+                              itemBuilder: (context, index) {
+                                return HourlyConditionsCell(results.forecastWindows[index]);
+                              }),
+                        )
+                      ],
+                    ),
                   );
                 })));
   }
