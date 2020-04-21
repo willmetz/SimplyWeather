@@ -4,8 +4,7 @@ import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/DataLayer/HourlyForecast.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/DataLayer/WeatherClient.dart';
-
-final _imageURLPrefix = "https://openweathermap.org/img/w/";
+import 'package:ost_weather/Utils/IconUtils.dart';
 
 class HomeBloc implements Bloc {
   final _client = WeatherClient();
@@ -79,11 +78,7 @@ class HomeData {
   double feelsLikeTemperature;
 
   String get currentConditionsImageUrl {
-    if (currentConditionsImageCode == null || currentConditionsImageCode == "") {
-      return "";
-    }
-
-    return _imageURLPrefix + currentConditionsImageCode + ".png";
+    return getImageUrlFromIconCode(currentConditionsImageCode);
   }
 
   List<ForecastWindow> forecastWindows;
@@ -96,10 +91,7 @@ class ForecastWindow {
   final String imageCode;
 
   String get imageUrl {
-    if (imageCode == null || imageCode == "") {
-      return "";
-    }
-    return _imageURLPrefix + imageCode + ".png";
+    return getImageUrlFromIconCode(imageCode);
   }
 
   ForecastWindow(this.windowStartTime, this.windowEndTime, this.temp, this.imageCode);
