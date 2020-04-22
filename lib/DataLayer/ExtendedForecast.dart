@@ -47,7 +47,7 @@ class DailyForecast {
   int windDirectionDegrees;
 
   @JsonKey(name: 'weather')
-  Weather weather;
+  List<Weather> weather;
 
   /// A necessary factory constructor for creating a new DailyForecast instance
   /// from a map. Pass the map to the generated `_$DailyForecastFromJson()` constructor.

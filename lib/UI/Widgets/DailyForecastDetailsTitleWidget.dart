@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:ost_weather/Bloc/ExtendedForecastBloc.dart';
 
 class DailyForecastDetailsTitleWidget extends StatelessWidget {
+  final DaysForecast _forecast;
+
+  DailyForecastDetailsTitleWidget(this._forecast);
+
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("Sunday, April 19th"));
+    return Center(child: Text(_forecast.day));
   }
 }

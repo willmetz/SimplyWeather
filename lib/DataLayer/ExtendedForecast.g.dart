@@ -25,9 +25,10 @@ Map<String, dynamic> _$ExtendedForecastToJson(ExtendedForecast instance) =>
 
 DailyForecast _$DailyForecastFromJson(Map<String, dynamic> json) {
   return DailyForecast(
-    json['weather'] == null
-        ? null
-        : Weather.fromJson(json['weather'] as Map<String, dynamic>),
+    (json['weather'] as List)
+        ?.map((e) =>
+            e == null ? null : Weather.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
     (json['wind_speed'] as num)?.toDouble(),
     json['temp'] == null
         ? null

@@ -37,7 +37,9 @@ class WeatherAppState extends State<WeatherApp> {
           return Scaffold(
             appBar: AppBar(title: Text("Simply Weather")),
             bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Colors.blue,
               items: getBottomNavBarItems(),
+              selectedItemColor: Colors.blue[900],
               currentIndex: _bottomNavCurrentIndex,
               onTap: onBottomNavTabTapped,
             ),

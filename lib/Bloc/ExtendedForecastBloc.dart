@@ -26,8 +26,8 @@ class ExtendedForecastBloc extends Bloc {
       daysForecast.lowTemp = dayData.dailyTemperatureRange.lowTemp.toInt();
       daysForecast.windSpeed = dayData.windSpeed.toInt();
       daysForecast.windDirection = getWindDirection(dayData.windDirectionDegrees);
-      daysForecast.imageUrl = getImageUrlFromIconCode(dayData.weather.imageCode);
-      daysForecast.weatherDescription = dayData.weather.description;
+      daysForecast.imageUrl = getImageUrlFromIconCode(dayData.weather[0].imageCode);
+      daysForecast.weatherDescription = dayData.weather[0].description;
 
       extendedForecastData.extendedForecast.add(daysForecast);
     }

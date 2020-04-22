@@ -1,7 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ost_weather/Bloc/ExtendedForecastBloc.dart';
 
-class DailuyForecastDetailsCellWidget extends StatelessWidget {
+class DailyForecastDetailsCellWidget extends StatelessWidget {
+  final DaysForecast _forecast;
+
+  DailyForecastDetailsCellWidget(this._forecast);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -13,8 +18,8 @@ class DailuyForecastDetailsCellWidget extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(padding: EdgeInsets.fromLTRB(0, 12, 0, 10), child: Text("Hi Temp: 67\u00b0")),
-                Container(padding: EdgeInsets.fromLTRB(0, 10, 0, 12), child: Text("Low Temp: 60\u00b0"))
+                Container(padding: EdgeInsets.fromLTRB(0, 12, 0, 10), child: Text("Hi Temp: ${_forecast.highTemp}\u00b0")),
+                Container(padding: EdgeInsets.fromLTRB(0, 10, 0, 12), child: Text("Low Temp: ${_forecast.lowTemp}\u00b0"))
               ],
             ),
           ),
@@ -22,7 +27,7 @@ class DailuyForecastDetailsCellWidget extends StatelessWidget {
             flex: 1,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[Text("Wind Speed"), Text("20 mph"), Text("SW")],
+              children: <Widget>[Text("Wind Speed"), Text("${_forecast.windSpeed} mph"), Text(_forecast.windDirection)],
             ),
           ),
           Expanded(
@@ -33,7 +38,7 @@ class DailuyForecastDetailsCellWidget extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: CachedNetworkImage(
-                    imageUrl: "https://openweathermap.org/img/w/10d.png",
+                    imageUrl: _forecast.imageUrl,
                     height: 75,
                     width: 75,
                     fit: BoxFit.fitWidth,
@@ -43,7 +48,7 @@ class DailuyForecastDetailsCellWidget extends StatelessWidget {
                     flex: 1,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text("Light Rain"),
+                      child: Text(_forecast.weatherDescription),
                     ))
               ],
             ),
