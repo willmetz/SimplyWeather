@@ -25,7 +25,9 @@ class HomeScreen extends StatelessWidget {
                   final HomeData results = snapshot.data;
 
                   if (results == null) {
-                    return Container();
+                    return Container(
+                      color: Colors.blue,
+                    );
                   }
 
                   return Container(

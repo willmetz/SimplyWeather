@@ -32,7 +32,9 @@ class ForecastScreen extends StatelessWidget {
           ExtendedForecastData data = snapshot.data;
 
           if (data == null) {
-            return Container();
+            return Container(
+              color: Colors.blue,
+            );
           }
 
           return Container(
