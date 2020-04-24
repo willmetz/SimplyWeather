@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/DataLayer/WeatherClient.dart';
+import 'package:ost_weather/DataLayer/WeatherApiClient.dart';
 import 'package:ost_weather/Utils/IconUtils.dart';
 
 class ExtendedForecastBloc extends Bloc {
-  final _client = WeatherClient();
+  final _client = WeatherApiClient();
   final _controller = StreamController<ExtendedForecastData>();
 
   Stream<ExtendedForecastData> get stream => _controller.stream;

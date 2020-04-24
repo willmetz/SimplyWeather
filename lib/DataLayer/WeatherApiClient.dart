@@ -5,10 +5,19 @@ import 'package:ost_weather/DataLayer/HourlyForecast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 
-class WeatherClient {
+class WeatherApiClient {
   final _path = "/data/2.5";
   final _host = "api.openweathermap.org";
   final _apiKey = "aa1dc17924497b3c41d3919fc5a27654";
+
+  static final WeatherApiClient _instance = WeatherApiClient._internal();
+
+  factory WeatherApiClient() {
+    return _instance;
+  }
+
+  //private constructor to ensure this class is only created here
+  WeatherApiClient._internal();
 
   Future<HourlyForecast> getHourlyForecast(String zipcode) async {
     final queryParams = {'zip': '$zipcode', 'APPID': '$_apiKey', 'units': 'imperial'};
