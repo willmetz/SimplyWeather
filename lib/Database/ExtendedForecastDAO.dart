@@ -10,7 +10,8 @@ class ExtendedForecastDAO {
   Future<Database> get _db async => await WeatherDatabase().getDatabase();
 
   Future addForecast(ExtendedForecast extendedForecast) async {
-    await _extendedForecastFolder.record(FORECAST_KEY).put(await _db, extendedForecast.toJson());
+    var data = extendedForecast.toJson();
+    await _extendedForecastFolder.record(FORECAST_KEY).put(await _db, data);
   }
 
   Future<ExtendedForecast> getForecast() async {

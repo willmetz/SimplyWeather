@@ -4,6 +4,7 @@ import 'package:ost_weather/Bloc/bloc_provider.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/UI/HomeScreen.dart';
 import 'package:ost_weather/UI/LocationScreen.dart';
+import 'package:ost_weather/Utils/AppPreference.dart';
 
 import 'UI/ForecastScreen.dart';
 
@@ -21,7 +22,7 @@ class WeatherAppState extends State<WeatherApp> {
 
   @override
   Widget build(BuildContext context) {
-    LocationBloc bloc = LocationBloc();
+    LocationBloc bloc = LocationBloc(AppPreferences());
 
     return MaterialApp(
       title: 'Simply Weather',

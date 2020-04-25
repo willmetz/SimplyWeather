@@ -7,7 +7,7 @@ import 'HourlyForecast.dart';
 /// the star denotes the source file name.
 part 'ExtendedForecast.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class ExtendedForecast {
   ExtendedForecast(this.dailyForecasts, this.forecastTimezone, this.retrievedAtTimeStamp);
 
@@ -33,7 +33,7 @@ class ExtendedForecast {
   Map<String, dynamic> toJson() => _$ExtendedForecastToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DailyForecast {
   DailyForecast(this.weather, this.windSpeed, this.dailyTemperatureRange, this.utcTimeStamp, this.windDirectionDegrees);
 
@@ -63,7 +63,7 @@ class DailyForecast {
   Map<String, dynamic> toJson() => _$DailyForecastToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DailyTemperatureRange {
   DailyTemperatureRange(this.dayTimeTemp, this.hiTemp, this.lowTemp, this.eveningTemp, this.nightTemp);
 

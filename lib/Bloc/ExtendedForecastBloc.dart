@@ -4,35 +4,50 @@ import 'package:intl/intl.dart';
 import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/DataLayer/WeatherApiClient.dart';
+import 'package:ost_weather/Database/ExtendedForecastDAO.dart';
+import 'package:ost_weather/Service/WeatherService.dart';
+import 'package:ost_weather/Utils/AppPreference.dart';
 import 'package:ost_weather/Utils/IconUtils.dart';
 
 class ExtendedForecastBloc extends Bloc {
-  final _client = WeatherApiClient();
+  final WeatherService _weatherService;
+  final AppPreferences _appPreferences;
+
   final _controller = StreamController<ExtendedForecastData>();
+
+  ExtendedForecastBloc(this._weatherService, this._appPreferences);
 
   Stream<ExtendedForecastData> get stream => _controller.stream;
 
-  void GetExtendedForecast(Location location) async {
+  Future<ExtendedForecastData> getExtendedForecast() async {
     ExtendedForecastData extendedForecastData = ExtendedForecastData();
     extendedForecastData.extendedForecast = new List();
 
-    var rawData = await _client.getExtendedForecastFromFile();
+    Location location = await _appPreferences.GetLocation();
 
-    for (var dayData in rawData.dailyForecasts) {
-      DaysForecast daysForecast = DaysForecast();
+    if (location != null) {
+      var rawData = await _weatherService.getExtendedForecast(location);
 
-      daysForecast.day = getDayFromUTC(dayData.utcTimeStamp);
-      daysForecast.highTemp = dayData.dailyTemperatureRange.hiTemp.toInt();
-      daysForecast.lowTemp = dayData.dailyTemperatureRange.lowTemp.toInt();
-      daysForecast.windSpeed = dayData.windSpeed.toInt();
-      daysForecast.windDirection = getWindDirection(dayData.windDirectionDegrees);
-      daysForecast.imageUrl = getImageUrlFromIconCode(dayData.weather[0].imageCode);
-      daysForecast.weatherDescription = dayData.weather[0].description;
+      for (var dayData in rawData.dailyForecasts) {
+        DaysForecast daysForecast = DaysForecast();
 
-      extendedForecastData.extendedForecast.add(daysForecast);
+        daysForecast.day = getDayFromUTC(dayData.utcTimeStamp);
+        daysForecast.highTemp = dayData.dailyTemperatureRange.hiTemp.toInt();
+        daysForecast.lowTemp = dayData.dailyTemperatureRange.lowTemp.toInt();
+        daysForecast.windSpeed = dayData.windSpeed.toInt();
+        daysForecast.windDirection = getWindDirection(dayData.windDirectionDegrees);
+        daysForecast.imageUrl = getImageUrlFromIconCode(dayData.weather[0].imageCode);
+        daysForecast.weatherDescription = dayData.weather[0].description;
+
+        extendedForecastData.extendedForecast.add(daysForecast);
+      }
+
+      _controller.sink.add(extendedForecastData);
+      return extendedForecastData;
+    } else {
+      //TODO emit something here
+      return null;
     }
-
-    _controller.sink.add(extendedForecastData);
   }
 
   String getDayFromUTC(int utcTime) {

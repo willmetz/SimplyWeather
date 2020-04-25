@@ -21,7 +21,7 @@ ExtendedForecast _$ExtendedForecastFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$ExtendedForecastToJson(ExtendedForecast instance) =>
     <String, dynamic>{
       'retrievedAtTimeStamp': instance.retrievedAtTimeStamp,
-      'daily': instance.dailyForecasts,
+      'daily': instance.dailyForecasts?.map((e) => e?.toJson())?.toList(),
       'timezone': instance.forecastTimezone,
     };
 
@@ -42,11 +42,11 @@ DailyForecast _$DailyForecastFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$DailyForecastToJson(DailyForecast instance) =>
     <String, dynamic>{
-      'temp': instance.dailyTemperatureRange,
+      'temp': instance.dailyTemperatureRange?.toJson(),
       'dt': instance.utcTimeStamp,
       'wind_speed': instance.windSpeed,
       'wind_deg': instance.windDirectionDegrees,
-      'weather': instance.weather,
+      'weather': instance.weather?.map((e) => e?.toJson())?.toList(),
     };
 
 DailyTemperatureRange _$DailyTemperatureRangeFromJson(
