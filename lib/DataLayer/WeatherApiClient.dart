@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:ost_weather/DataLayer/ExtendedForecast.dart';
 import 'package:ost_weather/DataLayer/HourlyForecast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:ost_weather/DataLayer/Location.dart';
+import 'package:ost_weather/Database/ExtendedForecastDAO.dart';
 
 class WeatherApiClient {
   final _path = "/data/2.5";
@@ -37,6 +40,21 @@ class WeatherApiClient {
     String weather = await rootBundle.loadString('assets/weather.json');
 
     return HourlyForecast.fromJson(json.decode(weather));
+  }
+
+  Future<ExtendedForecast> getExtendedForecast(Location location) async {
+    final queryParams = {'lat': '${location.latitude}', 'lon': '${location.longitude}', 'APPID': '$_apiKey', 'units': 'imperial'};
+
+    final uri = Uri.https(_host, _path + "/onecall", queryParams);
+
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      return ExtendedForecast.fromJson(json.decode(response.body));
+    } else {
+      log("Failed to get extended forecast: ${response.reasonPhrase}");
+      return null;
+    }
   }
 
   Future<ExtendedForecast> getExtendedForecastFromFile() async {

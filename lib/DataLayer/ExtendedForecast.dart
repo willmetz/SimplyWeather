@@ -9,7 +9,10 @@ part 'ExtendedForecast.g.dart';
 
 @JsonSerializable()
 class ExtendedForecast {
-  ExtendedForecast(this.dailyForecasts, this.forecastTimezone);
+  ExtendedForecast(this.dailyForecasts, this.forecastTimezone, this.retrievedAtTimeStamp);
+
+  //This does not come from the service butis needed to record timestamp
+  int retrievedAtTimeStamp;
 
   //there is a lot more data to deserialize if needed
 

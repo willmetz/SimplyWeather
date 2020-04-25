@@ -14,11 +14,13 @@ ExtendedForecast _$ExtendedForecastFromJson(Map<String, dynamic> json) {
             : DailyForecast.fromJson(e as Map<String, dynamic>))
         ?.toList(),
     json['timezone'] as String,
+    json['retrievedAtTimeStamp'] as int,
   );
 }
 
 Map<String, dynamic> _$ExtendedForecastToJson(ExtendedForecast instance) =>
     <String, dynamic>{
+      'retrievedAtTimeStamp': instance.retrievedAtTimeStamp,
       'daily': instance.dailyForecasts,
       'timezone': instance.forecastTimezone,
     };
