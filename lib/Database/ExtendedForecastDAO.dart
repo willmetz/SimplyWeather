@@ -4,7 +4,7 @@ import 'package:sembast/sembast.dart';
 
 class ExtendedForecastDAO {
   static const String FOLDER_NAME = "extendedForecast";
-  static const int FORECAST_KEY = 1234;
+  static const int FORECAST_KEY = 1;
   final _extendedForecastFolder = intMapStoreFactory.store(FOLDER_NAME);
 
   Future<Database> get _db async => await WeatherDatabase().getDatabase();

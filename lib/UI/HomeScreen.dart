@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:ost_weather/Bloc/HomeBloc.dart';
 import 'package:ost_weather/Bloc/bloc_provider.dart';
-import 'package:ost_weather/DataLayer/Location.dart';
+import 'package:ost_weather/DataLayer/WeatherApiClient.dart';
+import 'package:ost_weather/Database/ExtendedForecastDAO.dart';
+import 'package:ost_weather/Database/HourlyForecastDAO.dart';
+import 'package:ost_weather/Service/WeatherService.dart';
 import 'package:ost_weather/UI/Widgets/CurrentConditionsWidget.dart';
+import 'package:ost_weather/Utils/AppPreference.dart';
 
 import 'Widgets/HourlyConditionsCell.dart';
 
 class HomeScreen extends StatelessWidget {
-  final Location _location;
+  final HomeBloc homeBloc = HomeBloc(AppPreferences(), WeatherService(WeatherApiClient(), ExtendedForecastDAO(), HourlyForecstDAO()));
 
-  HomeScreen(this._location);
+  HomeScreen() {
+    WidgetsBinding.instance.addPostFrameCallback(_onLayoutDone);
+  }
+
+  void _onLayoutDone(_) {
+    homeBloc.currentWeather();
+  }
 
   @override
+  @override
   Widget build(BuildContext context) {
-    final HomeBloc homeBloc = HomeBloc();
-    homeBloc.getCurrentWeather(_location);
-
     return BlocProvider<HomeBloc>(
         bloc: homeBloc,
         child: Scaffold(

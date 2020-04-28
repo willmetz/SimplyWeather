@@ -16,13 +16,14 @@ HourlyForecast _$HourlyForecastFromJson(Map<String, dynamic> json) {
             ? null
             : ForecastInterval.fromJson(e as Map<String, dynamic>))
         ?.toList(),
-  );
+  )..retrievedAtTimeStamp = json['retrievedAtTimeStamp'] as int;
 }
 
 Map<String, dynamic> _$HourlyForecastToJson(HourlyForecast instance) =>
     <String, dynamic>{
-      'list': instance.forecastIntervals,
-      'city': instance.locationInformation,
+      'retrievedAtTimeStamp': instance.retrievedAtTimeStamp,
+      'list': instance.forecastIntervals?.map((e) => e?.toJson())?.toList(),
+      'city': instance.locationInformation?.toJson(),
     };
 
 ForecastInterval _$ForecastIntervalFromJson(Map<String, dynamic> json) {
@@ -45,9 +46,9 @@ ForecastInterval _$ForecastIntervalFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$ForecastIntervalToJson(ForecastInterval instance) =>
     <String, dynamic>{
       'dt': instance.timeStampUTC,
-      'main': instance.weatherReadings,
-      'weather': instance.weather,
-      'wind': instance.windDetails,
+      'main': instance.weatherReadings?.toJson(),
+      'weather': instance.weather?.map((e) => e?.toJson())?.toList(),
+      'wind': instance.windDetails?.toJson(),
       'dt_txt': instance.periodStartTimestamp,
     };
 

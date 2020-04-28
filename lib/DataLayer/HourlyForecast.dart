@@ -7,9 +7,12 @@ part 'HourlyForecast.g.dart';
 
 /// An annotation for the code generator to know that this class needs the
 /// JSON serialization logic to be generated.
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class HourlyForecast {
   HourlyForecast(this.locationInformation, this.forecastIntervals);
+
+  //this is not returned from the service, tracked locally for cache reasons
+  int retrievedAtTimeStamp;
 
   @JsonKey(name: 'list', defaultValue: null)
   List<ForecastInterval> forecastIntervals;
@@ -28,7 +31,7 @@ class HourlyForecast {
   Map<String, dynamic> toJson() => _$HourlyForecastToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class ForecastInterval {
   ForecastInterval(this.periodStartTimestamp, this.weather, this.weatherReadings);
 
@@ -58,7 +61,7 @@ class ForecastInterval {
   Map<String, dynamic> toJson() => _$ForecastIntervalToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class WeatherReadings {
   WeatherReadings(this.temperatureFarenheit, this.maxTempFarenheit, this.minTempFarenheit, this.feelsLike, this.humidity);
 
@@ -88,7 +91,7 @@ class WeatherReadings {
   Map<String, dynamic> toJson() => _$WeatherReadingsToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Weather {
   Weather(this.condition, this.description, this.imageCode);
 
@@ -112,7 +115,7 @@ class Weather {
   Map<String, dynamic> toJson() => _$WeatherToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class LocationInformation {
   LocationInformation(this.cityName, this.country);
 
@@ -133,7 +136,7 @@ class LocationInformation {
   Map<String, dynamic> toJson() => _$LocationInformationToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class WindDetails {
   @JsonKey(name: 'speed')
   double windSpeed;

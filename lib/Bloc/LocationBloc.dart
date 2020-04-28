@@ -4,7 +4,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LocationBloc implements Bloc {
   Location _location;
@@ -17,11 +16,16 @@ class LocationBloc implements Bloc {
 
   LocationBloc(this._appPreferences);
 
-  Future<Location> initLocation() async {
+  void getCurrentLocation(Function(Location) callback) async {
+    _location = await _appPreferences.GetLocation();
+    if (callback != null) {
+      callback(_location);
+    }
+  }
+
+  void initLocation() async {
     _location = await _appPreferences.GetLocation();
     _locationController.sink.add(_location);
-
-    return _location;
   }
 
   Future<bool> updateLocation() async {

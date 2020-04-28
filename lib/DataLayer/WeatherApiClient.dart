@@ -22,8 +22,8 @@ class WeatherApiClient {
   //private constructor to ensure this class is only created here
   WeatherApiClient._internal();
 
-  Future<HourlyForecast> getHourlyForecast(String zipcode) async {
-    final queryParams = {'zip': '$zipcode', 'APPID': '$_apiKey', 'units': 'imperial'};
+  Future<HourlyForecast> getHourlyForecast(Location location) async {
+    final queryParams = {'lat': '${location.latitude}', 'lon': '${location.longitude}', 'APPID': '$_apiKey', 'units': 'imperial'};
 
     final uri = Uri.https(_host, _path + "/forecast", queryParams);
 
@@ -32,8 +32,10 @@ class WeatherApiClient {
     if (response.statusCode == 200) {
       return HourlyForecast.fromJson(json.decode(response.body));
     } else {
-      throw Exception("Failed to get weather: ${response.reasonPhrase}");
+      log("Failed to get weather: ${response.reasonPhrase}");
     }
+
+    return null;
   }
 
   Future<HourlyForecast> getHourlyForecastFromFile() async {

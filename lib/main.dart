@@ -22,33 +22,24 @@ class WeatherAppState extends State<WeatherApp> {
 
   @override
   Widget build(BuildContext context) {
-    LocationBloc bloc = LocationBloc(AppPreferences());
-
     return MaterialApp(
       title: 'Simply Weather',
       theme: ThemeData(
         // This is the theme of your application.
         primarySwatch: Colors.blue,
       ),
-      home: FutureBuilder<Location>(
-        future: bloc.initLocation(),
-        builder: (context, snapshot) {
-          Location location = snapshot.data;
-
-          return Scaffold(
-            appBar: AppBar(title: Text("Simply Weather")),
-            bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: Colors.blue,
-              items: getBottomNavBarItems(),
-              selectedItemColor: Colors.blue[900],
-              currentIndex: _bottomNavCurrentIndex,
-              onTap: onBottomNavTabTapped,
-            ),
-            body: getCurrentWidget(_bottomNavCurrentIndex, location),
-          );
-        },
-        //child: MainScreen()),
+      home: Scaffold(
+        appBar: AppBar(title: Text("Simply Weather")),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.blue,
+          items: getBottomNavBarItems(),
+          selectedItemColor: Colors.blue[900],
+          currentIndex: _bottomNavCurrentIndex,
+          onTap: onBottomNavTabTapped,
+        ),
+        body: getCurrentWidget(_bottomNavCurrentIndex),
       ),
+      //child: MainScreen()),
     );
   }
 
@@ -66,12 +57,12 @@ class WeatherAppState extends State<WeatherApp> {
     });
   }
 
-  getCurrentWidget(int bottomNavCurrentIndex, Location location) {
+  getCurrentWidget(int bottomNavCurrentIndex) {
     switch (bottomNavCurrentIndex) {
       case 0:
         return LocationScreen();
       case 1:
-        return HomeScreen(location);
+        return HomeScreen();
       case 2:
         return ForecastScreen();
     }

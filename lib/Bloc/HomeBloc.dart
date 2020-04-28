@@ -3,17 +3,47 @@ import 'dart:async';
 import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/DataLayer/HourlyForecast.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/DataLayer/WeatherApiClient.dart';
+import 'package:ost_weather/Service/WeatherService.dart';
+import 'package:ost_weather/Utils/AppPreference.dart';
 import 'package:ost_weather/Utils/IconUtils.dart';
 
 class HomeBloc implements Bloc {
-  final _client = WeatherApiClient();
-  final _controller = StreamController<HomeData>();
+  final _controller = StreamController<Home>();
+  AppPreferences _appPreferences;
+  WeatherService _weatherService;
 
-  Stream<HomeData> get stream => _controller.stream;
+  HomeBloc(AppPreferences appPreferences, WeatherService weatherService) {
+    _appPreferences = appPreferences;
+    _weatherService = weatherService;
+  }
 
-  void getCurrentWeather(Location location) async {
-    final HourlyForecast forecast = await _client.getHourlyForecastFromFile();
+  Stream<Home> get stream => _controller.stream;
+
+  void currentWeather() async {
+    Home home = Home();
+    Location location = await _getCurrentLocation();
+
+    if (location == null || location.latitude == null || location.longitude == null) {
+      home.homeState = HomeState.noLocationAvailable;
+      _controller.sink.add(home);
+      return;
+    }
+
+    HomeData homeData = await _getCurrentWeather(location);
+
+    if (homeData.forecastWindows == null || homeData.forecastWindows.length == 0) {
+      home.homeState = HomeState.errorRetrievingConditions;
+      _controller.sink.add(home);
+      return;
+    }
+
+    home.homeState = HomeState.currentConditionsAvailable;
+    home.homeData = homeData;
+    _controller.sink.add(home);
+  }
+
+  Future<HomeData> _getCurrentWeather(Location location) async {
+    final HourlyForecast forecast = await _weatherService.getHourlyForecast(location);
 
     //find all forecast details for today
     //final today = DateTime.now();
@@ -58,7 +88,11 @@ class HomeBloc implements Bloc {
       }
     });
 
-    _controller.sink.add(homeData);
+    return homeData;
+  }
+
+  Future<Location> _getCurrentLocation() async {
+    return await _appPreferences.GetLocation();
   }
 
   @override
@@ -67,7 +101,15 @@ class HomeBloc implements Bloc {
   }
 }
 
+class Home {
+  HomeState homeState;
+  HomeData homeData;
+}
+
+enum HomeState { checkingLocation, noLocationAvailable, currentConditionsAvailable, errorRetrievingConditions }
+
 class HomeData {
+  bool locationUnknown;
   String city;
   double currentTemperature;
   double hiForDay;

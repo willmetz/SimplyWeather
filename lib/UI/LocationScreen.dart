@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:ost_weather/Bloc/LocationBloc.dart';
 import 'package:ost_weather/Bloc/bloc_provider.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
 
 class LocationScreen extends StatelessWidget {
-  LocationBloc _locationBloc;
+  final LocationBloc _locationBloc = LocationBloc(AppPreferences());
 
   LocationScreen() {
-    _locationBloc = LocationBloc(AppPreferences());
+    WidgetsBinding.instance.addPostFrameCallback(_onLayoutDone);
   }
 
-  @override
-  StatelessElement createElement() {
+  void _onLayoutDone(_) {
     _locationBloc.initLocation();
-
-    return super.createElement();
   }
 
   @override
