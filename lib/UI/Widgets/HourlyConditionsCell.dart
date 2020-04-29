@@ -14,7 +14,7 @@ class HourlyConditionsCell extends StatelessWidget {
         color: Colors.lightBlue,
         child: Row(
           children: <Widget>[
-            Expanded(flex: 1, child: Center(child: Text("${_forecastWindow.windowStartTime.hour} - ${_forecastWindow.windowEndTime.hour}"))),
+            Expanded(flex: 1, child: Center(child: Text("${_forecastWindow.windowStartHour} - ${_forecastWindow.windowEndHour}"))),
             Expanded(flex: 1, child: Center(child: Text("${_forecastWindow.temp}\u00b0"))),
             Expanded(
                 flex: 1,

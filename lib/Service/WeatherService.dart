@@ -24,7 +24,7 @@ class WeatherService {
     if (extendedForecast != null) {
       DateTime retrievedAt = DateTime.fromMillisecondsSinceEpoch(extendedForecast.retrievedAtTimeStamp);
 
-      if (retrievedAt.add(Duration(minutes: 15)).isAfter(DateTime.now())) {
+      if (retrievedAt.add(Duration(minutes: 30)).isAfter(DateTime.now())) {
         return extendedForecast;
       }
     }
@@ -45,19 +45,26 @@ class WeatherService {
   Future<HourlyForecast> getHourlyForecast(Location location) async {
     HourlyForecast forecast = await _hourlyForecstDAO.getForecast();
 
-    if (HourlyForecast != null) {
-      DateTime retrievedAt = DateTime.fromMillisecondsSinceEpoch(forecast.retrievedAtTimeStamp);
+    // if (forecast != null && forecast.retrievedAtTimeStamp != null) {
+    //   DateTime retrievedAt = DateTime.fromMillisecondsSinceEpoch(forecast.retrievedAtTimeStamp);
 
-      if (retrievedAt != null && retrievedAt.add(Duration(minutes: 15)).isAfter(DateTime.now())) {
-        return forecast;
-      }
-    }
+    //   if (retrievedAt != null && retrievedAt.add(Duration(minutes: 15)).isAfter(DateTime.now())) {
+    //     return forecast;
+    //   }
+    // }
 
     //cache is empty or expired, retrieve new data
     if (location != null && location.latitude != null && location.longitude != null) {
       forecast = await _weatherApiClient.getHourlyForecast(location);
     }
 
-    return null;
+    if (forecast != null) {
+      forecast.retrievedAtTimeStamp = DateTime.now().millisecondsSinceEpoch;
+
+      //save to the db
+      await _hourlyForecstDAO.addForecast(forecast);
+    }
+
+    return forecast;
   }
 }

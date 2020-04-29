@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:intl/intl.dart';
 import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/DataLayer/HourlyForecast.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
@@ -19,6 +20,13 @@ class HomeBloc implements Bloc {
 
   Stream<Home> get stream => _controller.stream;
 
+  Home getInitialData() {
+    Home data = Home();
+    data.homeState = HomeState.init;
+
+    return data;
+  }
+
   void currentWeather() async {
     Home home = Home();
     Location location = await _getCurrentLocation();
@@ -29,7 +37,10 @@ class HomeBloc implements Bloc {
       return;
     }
 
-    HomeData homeData = await _getCurrentWeather(location);
+    home.homeState = HomeState.gettingLatestWeather;
+    _controller.sink.add(home);
+
+    HomeData homeData = await _getForecast(location);
 
     if (homeData.forecastWindows == null || homeData.forecastWindows.length == 0) {
       home.homeState = HomeState.errorRetrievingConditions;
@@ -42,7 +53,7 @@ class HomeBloc implements Bloc {
     _controller.sink.add(home);
   }
 
-  Future<HomeData> _getCurrentWeather(Location location) async {
+  Future<HomeData> _getForecast(Location location) async {
     final HourlyForecast forecast = await _weatherService.getHourlyForecast(location);
 
     //find all forecast details for today
@@ -63,7 +74,9 @@ class HomeBloc implements Bloc {
       DateTime ft = DateTime.fromMillisecondsSinceEpoch(f.timeStampUTC * 1000, isUtc: false);
 
       if (today.day == ft.day) {
-        final ForecastWindow fw = ForecastWindow(ft, ft.add(new Duration(hours: 3)), f.weatherReadings.temperatureFarenheit, f.weather[0].imageCode);
+        DateFormat dateFormat = DateFormat.jm();
+        final ForecastWindow fw = ForecastWindow(
+            dateFormat.format(ft), dateFormat.format(ft.add(new Duration(hours: 3))), f.weatherReadings.temperatureFarenheit, f.weather[0].imageCode);
         homeData.forecastWindows.add(fw);
 
         //the first forecast found should be current conditions, set it accordinly if it hasn't been set
@@ -106,7 +119,7 @@ class Home {
   HomeData homeData;
 }
 
-enum HomeState { checkingLocation, noLocationAvailable, currentConditionsAvailable, errorRetrievingConditions }
+enum HomeState { init, gettingLatestWeather, noLocationAvailable, currentConditionsAvailable, errorRetrievingConditions }
 
 class HomeData {
   bool locationUnknown;
@@ -127,8 +140,8 @@ class HomeData {
 }
 
 class ForecastWindow {
-  final DateTime windowStartTime;
-  final DateTime windowEndTime;
+  final String windowStartHour;
+  final String windowEndHour;
   final double temp;
   final String imageCode;
 
@@ -136,5 +149,5 @@ class ForecastWindow {
     return getImageUrlFromIconCode(imageCode);
   }
 
-  ForecastWindow(this.windowStartTime, this.windowEndTime, this.temp, this.imageCode);
+  ForecastWindow(this.windowStartHour, this.windowEndHour, this.temp, this.imageCode);
 }
