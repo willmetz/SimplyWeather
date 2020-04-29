@@ -45,13 +45,13 @@ class WeatherService {
   Future<HourlyForecast> getHourlyForecast(Location location) async {
     HourlyForecast forecast = await _hourlyForecstDAO.getForecast();
 
-    // if (forecast != null && forecast.retrievedAtTimeStamp != null) {
-    //   DateTime retrievedAt = DateTime.fromMillisecondsSinceEpoch(forecast.retrievedAtTimeStamp);
+    if (forecast != null && forecast.retrievedAtTimeStamp != null) {
+      DateTime retrievedAt = DateTime.fromMillisecondsSinceEpoch(forecast.retrievedAtTimeStamp);
 
-    //   if (retrievedAt != null && retrievedAt.add(Duration(minutes: 15)).isAfter(DateTime.now())) {
-    //     return forecast;
-    //   }
-    // }
+      if (retrievedAt != null && retrievedAt.add(Duration(minutes: 15)).isAfter(DateTime.now())) {
+        return forecast;
+      }
+    }
 
     //cache is empty or expired, retrieve new data
     if (location != null && location.latitude != null && location.longitude != null) {
