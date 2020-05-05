@@ -8,6 +8,7 @@ import 'package:ost_weather/Service/WeatherService.dart';
 import 'package:ost_weather/UI/Widgets/CurrentConditionsWidget.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
 
+import 'Widgets/ForecastWidgets.dart';
 import 'Widgets/HourlyConditionsCell.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -31,9 +32,10 @@ class HomeScreen extends StatelessWidget {
                 initialData: homeBloc.getInitialData(),
                 builder: (context, snapshot) {
                   final Home results = snapshot.data;
+
                   switch (results.homeState) {
                     case HomeState.noLocationAvailable:
-                      return _noLocation();
+                      return locationRequired();
                     case HomeState.currentConditionsAvailable:
                       return _showCurrentWeather(results.homeData);
                     case HomeState.errorRetrievingConditions:
@@ -41,8 +43,7 @@ class HomeScreen extends StatelessWidget {
                     case HomeState.init:
                       return _init();
                     case HomeState.gettingLatestWeather:
-                      return _showLoading("Retrieving Weather");
-                      break;
+                      return loading("Retrieving Weather");
                   }
                 })));
   }
@@ -82,59 +83,26 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _showLoading(String text) {
+  Widget _unableToRetrieveData() {
     return Container(
         color: Colors.blue,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                height: 50,
-                width: 50,
-                child: CircularProgressIndicator(
-                  strokeWidth: 3,
-                  backgroundColor: Colors.white,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                child: Text(
-                  text,
-                  style: TextStyle(fontSize: 15),
-                ),
-              )
-            ],
-          ),
-        ));
-  }
-
-  Widget _noLocation() {
-    return Container(
-        color: Colors.blue,
-        child: Center(
-          child: Text(
-            "Please set a location to view the weather",
-            style: TextStyle(fontSize: 24),
-          ),
-        ));
-  }
-
-  Widget _unableToRetrieveData() {
-    return Container(
-        color: Colors.blue,
-        child: Center(
-          child: Column(
-            children: <Widget>[
               Text(
                 "Unable to retrieve weather at this time, please try again.",
                 style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
               ),
-              RaisedButton(
-                color: Colors.blue[300],
-                textColor: Colors.white,
-                child: Text("Try Again"),
-                onPressed: () => homeBloc.currentWeather(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                child: RaisedButton(
+                  color: Colors.blue[300],
+                  textColor: Colors.white,
+                  child: Text("Try Again"),
+                  onPressed: () => homeBloc.currentWeather(),
+                ),
               )
             ],
           ),

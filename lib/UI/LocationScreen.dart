@@ -25,18 +25,21 @@ class LocationScreen extends StatelessWidget {
                 builder: (context, snapshot) {
                   Location location = snapshot.data;
 
-                  return Column(children: <Widget>[
-                    Center(
-                        child: Container(
-                            padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
-                            child: RaisedButton(
-                              child: Text("Update Location"),
-                              onPressed: () async {
-                                await _locationBloc.updateLocation();
-                              },
-                            ))),
-                    Center(child: currentLocationInformation(location)),
-                  ]);
+                  return Container(
+                    color: Colors.blue,
+                    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                      Center(
+                          child: Container(
+                              padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                              child: RaisedButton(
+                                child: Text("Update Location"),
+                                onPressed: () async {
+                                  await _locationBloc.updateLocation();
+                                },
+                              ))),
+                      Center(child: currentLocationInformation(location)),
+                    ]),
+                  );
                 })));
   }
 

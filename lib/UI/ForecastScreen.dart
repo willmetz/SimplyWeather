@@ -9,6 +9,7 @@ import 'package:ost_weather/UI/Widgets/DailyForecastDetailsTitleWidget.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
 
 import 'Widgets/DailyForecastDetailsCellWidget.dart';
+import 'Widgets/ForecastWidgets.dart';
 
 class ForecastScreen extends StatelessWidget {
   final ExtendedForecastBloc _forecastBloc =
@@ -28,33 +29,45 @@ class ForecastScreen extends StatelessWidget {
       bloc: _forecastBloc,
       child: StreamBuilder(
         stream: _forecastBloc.stream,
+        initialData: _forecastBloc.getInitialData(),
         builder: (context, snapshot) {
           ExtendedForecastData data = snapshot.data;
 
-          if (data == null) {
-            return Container(
-              color: Colors.blue,
-            );
+          switch (data.extendedForecastState) {
+            case ExtendedForecastState.loading:
+              return loading("Loading Forecast");
+            case ExtendedForecastState.locationRequired:
+              return locationRequired();
+            case ExtendedForecastState.forecastReady:
+              return showExtendedForecast(data);
+            case ExtendedForecastState.forecastError:
+              return errorWithRetry("Error obtaining forecast.", "Try Again", _forecastBloc.getExtendedForecast);
+            case ExtendedForecastState.init:
+              return Container(
+                color: Colors.blue,
+              );
           }
-
-          return Container(
-            color: Colors.blue,
-            child: ListView.builder(
-                itemCount: data.extendedForecast.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    color: Colors.lightBlue,
-                    child: Column(
-                      children: <Widget>[
-                        DailyForecastDetailsTitleWidget(data.extendedForecast[index]),
-                        DailyForecastDetailsCellWidget(data.extendedForecast[index])
-                      ],
-                    ),
-                  );
-                }),
-          );
         },
       ),
+    );
+  }
+
+  Widget showExtendedForecast(ExtendedForecastData data) {
+    return Container(
+      color: Colors.blue,
+      child: ListView.builder(
+          itemCount: data.extendedForecast.length,
+          itemBuilder: (context, index) {
+            return Card(
+              color: Colors.lightBlue,
+              child: Column(
+                children: <Widget>[
+                  DailyForecastDetailsTitleWidget(data.extendedForecast[index]),
+                  DailyForecastDetailsCellWidget(data.extendedForecast[index])
+                ],
+              ),
+            );
+          }),
     );
   }
 }

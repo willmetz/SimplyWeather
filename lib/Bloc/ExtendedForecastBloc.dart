@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/DataLayer/WeatherApiClient.dart';
-import 'package:ost_weather/Database/ExtendedForecastDAO.dart';
 import 'package:ost_weather/Service/WeatherService.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
 import 'package:ost_weather/Utils/IconUtils.dart';
@@ -19,13 +17,23 @@ class ExtendedForecastBloc extends Bloc {
 
   Stream<ExtendedForecastData> get stream => _controller.stream;
 
-  Future<ExtendedForecastData> getExtendedForecast() async {
+  ExtendedForecastData getInitialData() {
+    ExtendedForecastData extendedForecastData = ExtendedForecastData();
+    extendedForecastData.extendedForecastState = ExtendedForecastState.init;
+
+    return extendedForecastData;
+  }
+
+  void getExtendedForecast() async {
     ExtendedForecastData extendedForecastData = ExtendedForecastData();
     extendedForecastData.extendedForecast = new List();
 
     Location location = await _appPreferences.GetLocation();
 
     if (location != null) {
+      extendedForecastData.extendedForecastState = ExtendedForecastState.loading;
+      _controller.sink.add(extendedForecastData);
+
       var rawData = await _weatherService.getExtendedForecast(location);
 
       for (var dayData in rawData.dailyForecasts) {
@@ -42,12 +50,17 @@ class ExtendedForecastBloc extends Bloc {
         extendedForecastData.extendedForecast.add(daysForecast);
       }
 
-      _controller.sink.add(extendedForecastData);
-      return extendedForecastData;
+      if (extendedForecastData.extendedForecast.length > 0) {
+        //we have data, mark the forecast as ready
+        extendedForecastData.extendedForecastState = ExtendedForecastState.forecastReady;
+      } else {
+        extendedForecastData.extendedForecastState = ExtendedForecastState.forecastError;
+      }
     } else {
-      //TODO emit something here
-      return null;
+      extendedForecastData.extendedForecastState = ExtendedForecastState.locationRequired;
     }
+
+    _controller.sink.add(extendedForecastData);
   }
 
   String getDayFromUTC(int utcTime) {
@@ -88,7 +101,10 @@ class ExtendedForecastBloc extends Bloc {
   }
 }
 
+enum ExtendedForecastState { init, loading, locationRequired, forecastReady, forecastError }
+
 class ExtendedForecastData {
+  ExtendedForecastState extendedForecastState;
   List<DaysForecast> extendedForecast;
 }
 
