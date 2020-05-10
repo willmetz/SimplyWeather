@@ -47,7 +47,7 @@ Widget errorWithRetry(String errorMsg, String retryTxt, Function() callback) {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Unable to retrieve weather at this time, please try again.",
+              errorMsg,
               style: TextStyle(fontSize: 20),
               textAlign: TextAlign.center,
             ),
@@ -56,7 +56,7 @@ Widget errorWithRetry(String errorMsg, String retryTxt, Function() callback) {
               child: RaisedButton(
                 color: Colors.blue[300],
                 textColor: Colors.white,
-                child: Text("Try Again"),
+                child: Text(retryTxt),
                 onPressed: () => callback(),
               ),
             )

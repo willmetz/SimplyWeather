@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
                     case HomeState.currentConditionsAvailable:
                       return _showCurrentWeather(results.homeData);
                     case HomeState.errorRetrievingConditions:
-                      return _unableToRetrieveData();
+                      return errorWithRetry("Unable to retrieve weather at this time, please try again.", "Try Again", homeBloc.currentWeather);
                     case HomeState.init:
                       return _init();
                     case HomeState.gettingLatestWeather:
@@ -81,31 +81,5 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _unableToRetrieveData() {
-    return Container(
-        color: Colors.blue,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "Unable to retrieve weather at this time, please try again.",
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                child: RaisedButton(
-                  color: Colors.blue[300],
-                  textColor: Colors.white,
-                  child: Text("Try Again"),
-                  onPressed: () => homeBloc.currentWeather(),
-                ),
-              )
-            ],
-          ),
-        ));
   }
 }
