@@ -1,8 +1,9 @@
 import 'package:ost_weather/Bloc/LocationBloc.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/Service/LocationService.dart';
-import 'package:ost_weather/Utils/AppPreference.dart';
 import 'package:test/test.dart';
+
+import '../Mocks/MockAppPreferences.dart';
+import '../Mocks/MockLocationService.dart';
 
 void main() {
   LocationBlocTest bloc = LocationBlocTest();
@@ -21,29 +22,5 @@ class LocationBlocTest {
       expect(location.latitude, equals(12.32));
       expect(location.longitude, equals(33.44));
     });
-  }
-}
-
-class MockAppPreferences implements AppPreferences {
-  Future<Location> location;
-  Future<bool> saveLocationResult;
-
-  @override
-  Future<Location> getLocation() async {
-    return await location;
-  }
-
-  @override
-  Future<bool> saveLocation(Location location) async {
-    return await saveLocationResult;
-  }
-}
-
-class MockLocationService implements LocationService {
-  Future<Location> currentLocation;
-
-  @override
-  Future<Location> getCurrentLocation() async {
-    return await currentLocation;
   }
 }
