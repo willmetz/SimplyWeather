@@ -4,12 +4,12 @@ import 'package:intl/intl.dart';
 import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/Service/WeatherService.dart';
-import 'package:ost_weather/Utils/AppPreference.dart';
+import 'package:ost_weather/Utils/IAppPreferences.dart';
 import 'package:ost_weather/Utils/IconUtils.dart';
 
 class ExtendedForecastBloc extends Bloc {
   final WeatherService _weatherService;
-  final AppPreferences _appPreferences;
+  final IAppPreferences _appPreferences;
 
   final _controller = StreamController<ExtendedForecastData>();
 
@@ -28,7 +28,7 @@ class ExtendedForecastBloc extends Bloc {
     ExtendedForecastData extendedForecastData = ExtendedForecastData();
     extendedForecastData.extendedForecast = new List();
 
-    Location location = await _appPreferences.GetLocation();
+    Location location = await _appPreferences.getLocation();
 
     if (location != null) {
       extendedForecastData.extendedForecastState = ExtendedForecastState.loading;

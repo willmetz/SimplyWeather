@@ -1,7 +1,11 @@
+import 'dart:html';
+
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AppPreferences {
+import 'IAppPreferences.dart';
+
+class AppPreferences implements IAppPreferences {
   static final AppPreferences _instance = AppPreferences._internal();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -12,7 +16,17 @@ class AppPreferences {
   //private constructor to ensure this class is only created here
   AppPreferences._internal();
 
-  Future<Location> GetLocation() async {
+  @override
+  Future<bool> saveLocation(Location location) async {
+    SharedPreferences sharedPreferences = await _prefs;
+
+    sharedPreferences.setInt("zip", location.zipCode);
+    sharedPreferences.setDouble("latitude", location.latitude);
+    sharedPreferences.setDouble("longitude", location.longitude);
+  }
+
+  @override
+  Future<Location> getLocation() async {
     SharedPreferences sharedPreferences = await _prefs;
 
     int zip = sharedPreferences.getInt("zip");
@@ -24,13 +38,5 @@ class AppPreferences {
     } else {
       return Location.allForms(zip, long, lat);
     }
-  }
-
-  Future<bool> SaveLocation(Location location) async {
-    SharedPreferences sharedPreferences = await _prefs;
-
-    sharedPreferences.setInt("zip", location.zipCode);
-    sharedPreferences.setDouble("latitude", location.latitude);
-    sharedPreferences.setDouble("longitude", location.longitude);
   }
 }

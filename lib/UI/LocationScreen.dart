@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:ost_weather/Bloc/LocationBloc.dart';
 import 'package:ost_weather/Bloc/bloc_provider.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
+import 'package:ost_weather/Service/LocationService.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
 
 class LocationScreen extends StatelessWidget {
-  final LocationBloc _locationBloc = LocationBloc(AppPreferences());
+  final LocationBloc _locationBloc = LocationBloc(AppPreferences(), LocationService());
 
   LocationScreen() {
     WidgetsBinding.instance.addPostFrameCallback(_onLayoutDone);
