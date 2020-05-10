@@ -1,9 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 
-import 'ILocationService.dart';
-
-class LocationService implements ILocationService {
+class LocationService {
   static final LocationService _instance = LocationService._internal();
 
   factory LocationService() {
@@ -15,7 +13,6 @@ class LocationService implements ILocationService {
 
   Geolocator _geolocator = Geolocator();
 
-  @override
   Future<Location> getCurrentLocation() async {
     Position position = await _geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.medium, locationPermissionLevel: GeolocationPermission.locationWhenInUse);

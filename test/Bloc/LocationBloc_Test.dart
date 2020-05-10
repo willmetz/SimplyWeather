@@ -1,15 +1,15 @@
 import 'package:ost_weather/Bloc/LocationBloc.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/Service/ILocationService.dart';
-import 'package:ost_weather/Utils/IAppPreferences.dart';
+import 'package:ost_weather/Service/LocationService.dart';
+import 'package:ost_weather/Utils/AppPreference.dart';
 import 'package:test/test.dart';
 
 void main() {
-  LocationBloc_Test bloc = LocationBloc_Test();
+  LocationBlocTest bloc = LocationBlocTest();
   test('Current Location Test', bloc.testCurrentLocationKnown);
 }
 
-class LocationBloc_Test {
+class LocationBlocTest {
   MockAppPreferences _mockAppPreferences = new MockAppPreferences();
   MockLocationService _mockLocationService = new MockLocationService();
 
@@ -24,7 +24,7 @@ class LocationBloc_Test {
   }
 }
 
-class MockAppPreferences implements IAppPreferences {
+class MockAppPreferences implements AppPreferences {
   Future<Location> location;
   Future<bool> saveLocationResult;
 
@@ -39,7 +39,7 @@ class MockAppPreferences implements IAppPreferences {
   }
 }
 
-class MockLocationService implements ILocationService {
+class MockLocationService implements LocationService {
   Future<Location> currentLocation;
 
   @override

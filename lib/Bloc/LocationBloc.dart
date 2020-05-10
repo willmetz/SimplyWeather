@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/Service/ILocationService.dart';
-import 'package:ost_weather/Utils/IAppPreferences.dart';
+import 'package:ost_weather/Service/LocationService.dart';
+import 'package:ost_weather/Utils/AppPreference.dart';
 
 class LocationBloc implements Bloc {
   Location _location;
 
-  final IAppPreferences _appPreferences;
-  final ILocationService _locationService;
+  final AppPreferences _appPreferences;
+  final LocationService _locationService;
 
   final _locationController = StreamController<Location>();
   Stream<Location> get locationStream => _locationController.stream;

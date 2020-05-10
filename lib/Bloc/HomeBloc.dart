@@ -5,15 +5,15 @@ import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/DataLayer/HourlyForecast.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/Service/WeatherService.dart';
-import 'package:ost_weather/Utils/IAppPreferences.dart';
+import 'package:ost_weather/Utils/AppPreference.dart';
 import 'package:ost_weather/Utils/IconUtils.dart';
 
 class HomeBloc implements Bloc {
   final _controller = StreamController<Home>();
-  IAppPreferences _appPreferences;
+  AppPreferences _appPreferences;
   WeatherService _weatherService;
 
-  HomeBloc(IAppPreferences appPreferences, WeatherService weatherService) {
+  HomeBloc(AppPreferences appPreferences, WeatherService weatherService) {
     _appPreferences = appPreferences;
     _weatherService = weatherService;
   }
