@@ -4,6 +4,7 @@ import 'package:ost_weather/Bloc/bloc_provider.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/UI/HomeScreen.dart';
 import 'package:ost_weather/UI/LocationScreen.dart';
+import 'package:ost_weather/UI/RadarScreen.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
 
 import 'UI/ForecastScreen.dart';
@@ -28,16 +29,28 @@ class WeatherAppState extends State<WeatherApp> {
         // This is the theme of your application.
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
-        appBar: AppBar(title: Text("Simply Weather")),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.blue,
-          items: getBottomNavBarItems(),
-          selectedItemColor: Colors.blue[900],
-          currentIndex: _bottomNavCurrentIndex,
-          onTap: onBottomNavTabTapped,
+      home: Builder(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: Text("Simply Weather"),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.edit_location),
+                onPressed: () {
+                  onLocationTapped(context);
+                },
+              )
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colors.blue,
+            items: getBottomNavBarItems(),
+            selectedItemColor: Colors.blue[900],
+            currentIndex: _bottomNavCurrentIndex,
+            onTap: onBottomNavTabTapped,
+          ),
+          body: getCurrentWidget(_bottomNavCurrentIndex),
         ),
-        body: getCurrentWidget(_bottomNavCurrentIndex),
       ),
       //child: MainScreen()),
     );
@@ -45,10 +58,14 @@ class WeatherAppState extends State<WeatherApp> {
 
   List<BottomNavigationBarItem> getBottomNavBarItems() {
     return [
-      new BottomNavigationBarItem(icon: Icon(Icons.edit_location), title: Text("Location")),
+      new BottomNavigationBarItem(icon: Icon(Icons.satellite), title: Text("Radar")),
       BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
       BottomNavigationBarItem(icon: Icon(Icons.calendar_today), title: Text("Forecast"))
     ];
+  }
+
+  void onLocationTapped(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => LocationScreen()));
   }
 
   void onBottomNavTabTapped(int indexTapped) {
@@ -60,7 +77,7 @@ class WeatherAppState extends State<WeatherApp> {
   getCurrentWidget(int bottomNavCurrentIndex) {
     switch (bottomNavCurrentIndex) {
       case 0:
-        return LocationScreen();
+        return RadarScreen();
       case 1:
         return HomeScreen();
       case 2:

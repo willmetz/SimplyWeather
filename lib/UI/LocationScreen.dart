@@ -21,6 +21,7 @@ class LocationScreen extends StatelessWidget {
     return BlocProvider<LocationBloc>(
         bloc: _locationBloc,
         child: Scaffold(
+            appBar: AppBar(title: Text("Location")),
             body: StreamBuilder(
                 stream: _locationBloc.locationStream,
                 builder: (context, snapshot) {
@@ -39,6 +40,7 @@ class LocationScreen extends StatelessWidget {
                                 },
                               ))),
                       Center(child: currentLocationInformation(location)),
+                      RaisedButton(child: Text("Done"), onPressed: () => Navigator.pop(context))
                     ]),
                   );
                 })));
