@@ -23,16 +23,12 @@ class RadarBloc implements Bloc {
     Location location = await _appPreferences.getLocation();
 
     if (location != null) {
-      num n = pow(2, zoom);
-      int xTile = (n * ((location.longitude + 180.0) / 360.0)).toInt();
-
-      //ytile = int((1.0 - math.asinh(math.tan(lat_rad)) / math.pi) / 2.0 * n)
-      num lat = degreesToRads(location.latitude);
-      int yTile = ((1.0 - asinh(tan(lat)) / pi) / 2.0 * n).toInt();
+      Tile centerTile = getCenterTile(zoom, location.latitude, location.longitude);
 
       //build a tile
       //TODO - make layer dynamic
-      String tileUrl = "https://tile.openweathermap.org/map/precipitation_new/$zoom/$xTile/$yTile.png?appid={api_key}";
+      String api_key = "test";
+      String tileUrl = "https://tile.openweathermap.org/map/precipitation_new/$zoom/${centerTile.xTileNumber}/${centerTile.yTileNumber}.png?appid=$api_key";
       _data.tiles.clear();
       _data.tiles.add(tileUrl);
       _data.state = RadarState.dataReady;
@@ -41,6 +37,17 @@ class RadarBloc implements Bloc {
     }
 
     _controller.sink.add(_data);
+  }
+
+  Tile getCenterTile(int zoom, double lat, double long) {
+    num n = pow(2, zoom);
+    int xTile = (n * ((long + 180.0) / 360.0)).toInt();
+
+    //ytile = int((1.0 - math.asinh(math.tan(lat_rad)) / math.pi) / 2.0 * n)
+    num latInRads = degreesToRads(lat);
+    int yTile = ((1.0 - asinh(tan(latInRads)) / pi) / 2.0 * n).toInt();
+
+    return Tile(zoom, xTile, yTile);
   }
 
   num degreesToRads(num deg) {
@@ -66,4 +73,10 @@ enum RadarState { init, fetchingData, noLocationAvailable, dataReady, error }
 class RadarData {
   final List<String> tiles = new List();
   RadarState state;
+}
+
+class Tile {
+  final int zoom, xTileNumber, yTileNumber;
+
+  Tile(this.zoom, this.xTileNumber, this.yTileNumber);
 }
