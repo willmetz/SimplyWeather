@@ -1,17 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:ost_weather/Config/WeatherConfig.dart';
 import 'package:ost_weather/DataLayer/ExtendedForecast.dart';
 import 'package:ost_weather/DataLayer/HourlyForecast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/Database/ExtendedForecastDAO.dart';
 
 class WeatherApiClient {
   final _path = "/data/2.5";
   final _host = "api.openweathermap.org";
-  final _apiKey = "aa1dc17924497b3c41d3919fc5a27654";
 
   static final WeatherApiClient _instance = WeatherApiClient._internal();
 
@@ -23,7 +22,7 @@ class WeatherApiClient {
   WeatherApiClient._internal();
 
   Future<HourlyForecast> getHourlyForecast(Location location) async {
-    final queryParams = {'lat': '${location.latitude}', 'lon': '${location.longitude}', 'APPID': '$_apiKey', 'units': 'imperial'};
+    final queryParams = {'lat': '${location.latitude}', 'lon': '${location.longitude}', 'APPID': '$OPEN_WEATHER_API_KEY', 'units': 'imperial'};
 
     final uri = Uri.https(_host, _path + "/forecast", queryParams);
 
@@ -45,7 +44,7 @@ class WeatherApiClient {
   }
 
   Future<ExtendedForecast> getExtendedForecast(Location location) async {
-    final queryParams = {'lat': '${location.latitude}', 'lon': '${location.longitude}', 'APPID': '$_apiKey', 'units': 'imperial'};
+    final queryParams = {'lat': '${location.latitude}', 'lon': '${location.longitude}', 'APPID': '$OPEN_WEATHER_API_KEY', 'units': 'imperial'};
 
     final uri = Uri.https(_host, _path + "/onecall", queryParams);
 

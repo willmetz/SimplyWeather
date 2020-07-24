@@ -34,7 +34,8 @@ class RadarBlocTest {
     _mockAppPreferences.location = Future<Location>.value(Location.fromGeoInfo(41.85, -87.65));
 
     RadarData expectedData = RadarData();
-    expectedData.tiles.add("https://tile.openweathermap.org/map/precipitation_new/12/1050/1522.png?appid=test");
+    expectedData.precipitationOverlayTiles.add("https://tile.openweathermap.org/map/precipitation_new/12/1050/1522.png?appid=test");
+    expectedData.state = RadarState.dataReady;
 
     expectLater(bloc.stream, emits(RadarDataMatcher(expectedData)));
 
@@ -57,11 +58,16 @@ class RadarDataMatcher extends Matcher {
   bool matches(actual, Map matchState) {
     actualData = actual as RadarData;
 
-    return actualData.tiles[0] == expectedData.tiles[0] && actualData.state == RadarState.dataReady;
+    bool tileDataMatches = true;
+
+    for (int i = 0; i < expectedData.precipitationOverlayTiles.length; i++) {
+      tileDataMatches &= actualData.precipitationOverlayTiles[i].startsWith(expectedData.precipitationOverlayTiles[i]);
+    }
+
+    return tileDataMatches && actualData.state == expectedData.state;
   }
 
   Description describeMismatch(dynamic item, Description mismatchDescription, Map<dynamic, dynamic> matchState, bool verbose) {
-    return mismatchDescription
-        .add("Has actual emitted radar data: state = '${actualData.state}'\nexpectedState = ${expectedData.state}\nactualState: ${actualData.tiles[0]}\nexpected Tile: ${expectedData.tiles[0]}");
+    return mismatchDescription.add("Has actual emitted radar data: '$actualData'\nexpected = $expectedData");
   }
 }
