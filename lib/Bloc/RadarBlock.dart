@@ -30,13 +30,41 @@ class RadarBloc implements Bloc {
 
       //build a tile
       _data.layeredTiles.clear();
-      _data.layeredTiles.add(MapWithRadarTile(_createMapTileUrl(zoom, centerTile), _createTileUrl(zoom, centerTile), centerTile));
+      _data.layeredTiles.addAll(generateAllTilesFromCenterTile(centerTile));
       _data.state = RadarState.dataReady;
     } else {
       _data.state = RadarState.noLocationAvailable;
     }
 
     _controller.sink.add(_data);
+  }
+
+  List<MapWithRadarTile> generateAllTilesFromCenterTile(Tile centerTile) {
+    List<MapWithRadarTile> tiles = new List(9);
+
+    int zoom = centerTile.zoom;
+
+    //the order of the tiles will be upper left to bottom right
+    Tile tile = Tile(zoom, centerTile.xTileNumber - 1, centerTile.yTileNumber - 1);
+    tiles[0] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
+    tile = Tile(zoom, centerTile.xTileNumber, centerTile.yTileNumber - 1);
+    tiles[1] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
+    tile = Tile(zoom, centerTile.xTileNumber + 1, centerTile.yTileNumber - 1);
+    tiles[2] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
+    tile = Tile(zoom, centerTile.xTileNumber - 1, centerTile.yTileNumber);
+    tiles[3] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
+    tile = Tile(zoom, centerTile.xTileNumber, centerTile.yTileNumber);
+    tiles[4] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
+    tile = Tile(zoom, centerTile.xTileNumber + 1, centerTile.yTileNumber);
+    tiles[5] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
+    tile = Tile(zoom, centerTile.xTileNumber - 1, centerTile.yTileNumber + 1);
+    tiles[6] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
+    tile = Tile(zoom, centerTile.xTileNumber, centerTile.yTileNumber + 1);
+    tiles[7] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
+    tile = Tile(zoom, centerTile.xTileNumber + 1, centerTile.yTileNumber + 1);
+    tiles[8] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
+
+    return tiles;
   }
 
   String _createMapTileUrl(int zoom, Tile tile) {

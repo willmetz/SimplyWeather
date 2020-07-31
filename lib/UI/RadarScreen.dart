@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ost_weather/Bloc/RadarBlock.dart';
 import 'package:ost_weather/Bloc/bloc_provider.dart';
 import 'package:ost_weather/UI/Widgets/ForecastWidgets.dart';
+import 'package:ost_weather/UI/Widgets/RadarOverlayWidget.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
 
 class RadarScreen extends StatelessWidget {
@@ -18,7 +20,7 @@ class RadarScreen extends StatelessWidget {
           final RadarData radarData = snapshot.data;
 
           if (radarData == null) {
-            _bloc.getLatestRadar(4);
+            _bloc.getLatestRadar(8);
             return Center(
               child: Text("Loading..."),
             );
@@ -26,19 +28,30 @@ class RadarScreen extends StatelessWidget {
             if (radarData.state == RadarState.noLocationAvailable) {
               return locationRequired();
             }
-            return Center(
-              child: Stack(children: <Widget>[
-                Image.network(
-                  radarData.layeredTiles[0].mapUrlForTile,
-                  height: 256,
-                  width: 256,
+            return Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(child: RadarOverlayWidget(radarData.layeredTiles[0])),
+                    Expanded(child: RadarOverlayWidget(radarData.layeredTiles[1])),
+                    Expanded(child: RadarOverlayWidget(radarData.layeredTiles[2])),
+                  ],
                 ),
-                Image.network(
-                  radarData.layeredTiles[0].precipitationUrlForTile,
-                  height: 256,
-                  width: 256,
+                Row(
+                  children: <Widget>[
+                    Expanded(child: RadarOverlayWidget(radarData.layeredTiles[3])),
+                    Expanded(child: RadarOverlayWidget(radarData.layeredTiles[4])),
+                    Expanded(child: RadarOverlayWidget(radarData.layeredTiles[5])),
+                  ],
                 ),
-              ]),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: RadarOverlayWidget(radarData.layeredTiles[6])),
+                    Expanded(child: RadarOverlayWidget(radarData.layeredTiles[7])),
+                    Expanded(child: RadarOverlayWidget(radarData.layeredTiles[8])),
+                  ],
+                )
+              ],
             );
           }
         },
