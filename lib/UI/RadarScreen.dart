@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ost_weather/Bloc/RadarBlock.dart';
 import 'package:ost_weather/Bloc/bloc_provider.dart';
 import 'package:ost_weather/UI/Widgets/ForecastWidgets.dart';
+import 'package:ost_weather/UI/Widgets/LocationPainter.dart';
 import 'package:ost_weather/UI/Widgets/RadarOverlayWidget.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
 
@@ -40,7 +41,11 @@ class RadarScreen extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Expanded(child: RadarOverlayWidget(radarData.layeredTiles[3])),
-                    Expanded(child: RadarOverlayWidget(radarData.layeredTiles[4])),
+                    Expanded(
+                        child: Stack(children: <Widget>[
+                      RadarOverlayWidget(radarData.layeredTiles[4]),
+                      CustomPaint(painter: LocationPainter(radarData.layeredTiles[4].tile.xTileOffsetPercent, radarData.layeredTiles[4].tile.yTileOffsetPercent, Colors.blue))
+                    ])),
                     Expanded(child: RadarOverlayWidget(radarData.layeredTiles[5])),
                   ],
                 ),

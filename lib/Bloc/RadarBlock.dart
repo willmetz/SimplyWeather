@@ -45,23 +45,23 @@ class RadarBloc implements Bloc {
     int zoom = centerTile.zoom;
 
     //the order of the tiles will be upper left to bottom right
-    Tile tile = Tile(zoom, centerTile.xTileNumber - 1, centerTile.yTileNumber - 1);
+    Tile tile = Tile(zoom, centerTile.xTileCoordinate - 1, centerTile.yTileCoordinate - 1);
     tiles[0] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileNumber, centerTile.yTileNumber - 1);
+    tile = Tile(zoom, centerTile.xTileCoordinate, centerTile.yTileCoordinate - 1);
     tiles[1] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileNumber + 1, centerTile.yTileNumber - 1);
+    tile = Tile(zoom, centerTile.xTileCoordinate + 1, centerTile.yTileCoordinate - 1);
     tiles[2] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileNumber - 1, centerTile.yTileNumber);
+    tile = Tile(zoom, centerTile.xTileCoordinate - 1, centerTile.yTileCoordinate);
     tiles[3] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileNumber, centerTile.yTileNumber);
+    tile = Tile(zoom, centerTile.xTileCoordinate, centerTile.yTileCoordinate);
     tiles[4] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileNumber + 1, centerTile.yTileNumber);
+    tile = Tile(zoom, centerTile.xTileCoordinate + 1, centerTile.yTileCoordinate);
     tiles[5] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileNumber - 1, centerTile.yTileNumber + 1);
+    tile = Tile(zoom, centerTile.xTileCoordinate - 1, centerTile.yTileCoordinate + 1);
     tiles[6] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileNumber, centerTile.yTileNumber + 1);
+    tile = Tile(zoom, centerTile.xTileCoordinate, centerTile.yTileCoordinate + 1);
     tiles[7] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileNumber + 1, centerTile.yTileNumber + 1);
+    tile = Tile(zoom, centerTile.xTileCoordinate + 1, centerTile.yTileCoordinate + 1);
     tiles[8] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
 
     return tiles;
@@ -77,11 +77,11 @@ class RadarBloc implements Bloc {
 
   Tile getCenterTile(int zoom, double lat, double long) {
     num n = pow(2, zoom);
-    int xTile = (n * ((long + 180.0) / 360.0)).toInt();
+    double xTile = (n * ((long + 180.0) / 360.0)).toDouble();
 
     //ytile = int((1.0 - math.asinh(math.tan(lat_rad)) / math.pi) / 2.0 * n)
     num latInRads = degreesToRads(lat);
-    int yTile = ((1.0 - asinh(tan(latInRads)) / pi) / 2.0 * n).toInt();
+    double yTile = ((1.0 - asinh(tan(latInRads)) / pi) / 2.0 * n).toDouble();
 
     return Tile(zoom, xTile, yTile);
   }
@@ -108,7 +108,24 @@ class MapWithRadarTile {
 }
 
 class Tile {
-  final int zoom, xTileNumber, yTileNumber;
+  final int zoom;
+  final double xTileCoordinate, yTileCoordinate;
 
-  Tile(this.zoom, this.xTileNumber, this.yTileNumber);
+  Tile(this.zoom, this.xTileCoordinate, this.yTileCoordinate);
+
+  int get xTileNumber {
+    return xTileCoordinate.floor();
+  }
+
+  int get yTileNumber {
+    return yTileCoordinate.floor();
+  }
+
+  double get xTileOffsetPercent {
+    return xTileCoordinate - xTileCoordinate.floor();
+  }
+
+  double get yTileOffsetPercent {
+    return yTileCoordinate - yTileCoordinate.floor();
+  }
 }
