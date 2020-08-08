@@ -14,8 +14,11 @@ class LocationService {
   Geolocator _geolocator = Geolocator();
 
   Future<Location> getCurrentLocation() async {
-    Position position = await _geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.medium, locationPermissionLevel: GeolocationPermission.locationWhenInUse);
+    _geolocator.forceAndroidLocationManager = true;
+    Position position = await _geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.medium, locationPermissionLevel: GeolocationPermission.locationWhenInUse)
+        .timeout(Duration(seconds: 10))
+        .catchError((error) => _geolocator.getLastKnownPosition());
 
     if (position != null) {
       return Location.fromGeoInfo(position.latitude, position.longitude);
