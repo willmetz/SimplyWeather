@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ost_weather/Bloc/RadarBlock.dart';
 import 'package:ost_weather/Bloc/bloc_provider.dart';
@@ -21,7 +20,7 @@ class RadarScreen extends StatelessWidget {
           final RadarData radarData = snapshot.data;
 
           if (radarData == null) {
-            _bloc.getLatestRadar(10);
+            _bloc.getLatestRadar(12);
             return Center(
               child: Text("Loading..."),
             );
@@ -37,7 +36,6 @@ class RadarScreen extends StatelessWidget {
                   RadarOverlayWidget(radarData.layeredTiles[3]),
                   Stack(children: <Widget>[
                     RadarOverlayWidget(radarData.layeredTiles[4]),
-
                     LayoutBuilder(
                       builder: (context, constraints) {
                         return Container(
@@ -50,45 +48,12 @@ class RadarScreen extends StatelessWidget {
                         );
                       },
                     ),
-
-                    //CustomPaint(painter: LocationPainter(radarData.layeredTiles[4].tile.xTileOffsetPercent, radarData.layeredTiles[4].tile.yTileOffsetPercent, Colors.blue))
                   ]),
                   RadarOverlayWidget(radarData.layeredTiles[5])
                 ]),
                 TableRow(children: [RadarOverlayWidget(radarData.layeredTiles[6]), RadarOverlayWidget(radarData.layeredTiles[7]), RadarOverlayWidget(radarData.layeredTiles[8])])
               ],
             );
-
-            // return Column(
-            //   children: <Widget>[
-            //     Row(
-            //       mainAxisSize: MainAxisSize.max,
-            //       children: <Widget>[
-            //         RadarOverlayWidget(radarData.layeredTiles[0]),
-            //         RadarOverlayWidget(radarData.layeredTiles[1]),
-            //         RadarOverlayWidget(radarData.layeredTiles[2]),
-            //       ],
-            //     ),
-            //     Row(
-            //       children: <Widget>[
-            //         Expanded(child: RadarOverlayWidget(radarData.layeredTiles[3])),
-            //         Expanded(
-            //             child: Stack(children: <Widget>[
-            //           RadarOverlayWidget(radarData.layeredTiles[4]),
-            //           CustomPaint(painter: LocationPainter(radarData.layeredTiles[4].tile.xTileOffsetPercent, radarData.layeredTiles[4].tile.yTileOffsetPercent, Colors.blue))
-            //         ])),
-            //         Expanded(child: RadarOverlayWidget(radarData.layeredTiles[5])),
-            //       ],
-            //     ),
-            //     Row(
-            //       children: <Widget>[
-            //         Expanded(child: RadarOverlayWidget(radarData.layeredTiles[6])),
-            //         Expanded(child: RadarOverlayWidget(radarData.layeredTiles[7])),
-            //         Expanded(child: RadarOverlayWidget(radarData.layeredTiles[8])),
-            //       ],
-            //     )
-            //   ],
-            // );
           }
         },
       )),
