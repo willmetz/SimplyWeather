@@ -11,6 +11,7 @@ class RadarOverlayWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: <Widget>[
       CachedNetworkImage(
+        fadeOutDuration: Duration(seconds: 3),
         imageUrl: _tile.mapUrlForTile,
         fit: BoxFit.scaleDown,
       ),

@@ -11,9 +11,11 @@ import 'package:ost_weather/Utils/MathUtils.dart';
 class RadarBloc implements Bloc {
   final AppPreferences _appPreferences;
   final _controller = StreamController<RadarData>();
+  final _zoomController = StreamController<int>();
   RadarData _data;
 
   Stream<RadarData> get stream => _controller.stream;
+  Stream<int> get zoomStream => _zoomController.stream;
 
   RadarBloc(this._appPreferences) {
     _data = new RadarData();
@@ -21,6 +23,11 @@ class RadarBloc implements Bloc {
   }
 
   RadarData currentState() => _data;
+
+  void updateZoom(int zoom) {
+    _zoomController.sink.add(zoom);
+    getLatestRadar(zoom);
+  }
 
   void getLatestRadar(int zoom) async {
     Location location = await _appPreferences.getLocation();
@@ -30,7 +37,7 @@ class RadarBloc implements Bloc {
 
       //build a tile
       _data.layeredTiles.clear();
-      _data.layeredTiles.addAll(generateAllTilesFromCenterTile(centerTile));
+      _data.layeredTiles.addAll(generateAllTilesFromCenterTile(centerTile, _data));
       _data.state = RadarState.dataReady;
     } else {
       _data.state = RadarState.noLocationAvailable;
@@ -39,7 +46,7 @@ class RadarBloc implements Bloc {
     _controller.sink.add(_data);
   }
 
-  List<MapWithRadarTile> generateAllTilesFromCenterTile(Tile centerTile) {
+  List<MapWithRadarTile> generateAllTilesFromCenterTile(Tile centerTile, RadarData currentData) {
     List<MapWithRadarTile> tiles = new List(9);
 
     int zoom = centerTile.zoom;
@@ -89,6 +96,7 @@ class RadarBloc implements Bloc {
   @override
   void dispose() {
     _controller.close();
+    _zoomController.close();
   }
 }
 
@@ -97,6 +105,7 @@ enum RadarState { init, fetchingData, noLocationAvailable, dataReady, error }
 class RadarData {
   final List<MapWithRadarTile> layeredTiles = new List();
   RadarState state;
+  int zoom;
 }
 
 class MapWithRadarTile {
