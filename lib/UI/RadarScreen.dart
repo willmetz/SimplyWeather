@@ -30,6 +30,10 @@ class RadarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    double rowHeight = screenWidth / 3;
+
     return BlocProvider<RadarBloc>(
       bloc: _bloc,
       child: Scaffold(
@@ -53,14 +57,14 @@ class RadarScreen extends StatelessWidget {
                   border: TableBorder(bottom: BorderSide.none, top: BorderSide.none, left: BorderSide.none, right: BorderSide.none),
                   children: [
                     TableRow(children: [
-                      RadarOverlayWidget(radarData.layeredTiles[0]),
-                      RadarOverlayWidget(radarData.layeredTiles[1]),
-                      RadarOverlayWidget(radarData.layeredTiles[2]),
+                      RadarOverlayWidget(radarData.layeredTiles[0], rowHeight),
+                      RadarOverlayWidget(radarData.layeredTiles[1], rowHeight),
+                      RadarOverlayWidget(radarData.layeredTiles[2], rowHeight),
                     ]),
                     TableRow(children: [
-                      RadarOverlayWidget(radarData.layeredTiles[3]),
+                      RadarOverlayWidget(radarData.layeredTiles[3], rowHeight),
                       Stack(children: <Widget>[
-                        RadarOverlayWidget(radarData.layeredTiles[4]),
+                        RadarOverlayWidget(radarData.layeredTiles[4], rowHeight),
                         LayoutBuilder(
                           builder: (context, constraints) {
                             return Container(
@@ -74,9 +78,13 @@ class RadarScreen extends StatelessWidget {
                           },
                         ),
                       ]),
-                      RadarOverlayWidget(radarData.layeredTiles[5])
+                      RadarOverlayWidget(radarData.layeredTiles[5], rowHeight)
                     ]),
-                    TableRow(children: [RadarOverlayWidget(radarData.layeredTiles[6]), RadarOverlayWidget(radarData.layeredTiles[7]), RadarOverlayWidget(radarData.layeredTiles[8])])
+                    TableRow(children: [
+                      RadarOverlayWidget(radarData.layeredTiles[6], rowHeight),
+                      RadarOverlayWidget(radarData.layeredTiles[7], rowHeight),
+                      RadarOverlayWidget(radarData.layeredTiles[8], rowHeight)
+                    ])
                   ],
                 ),
                 Container(

@@ -4,8 +4,9 @@ import 'package:ost_weather/Bloc/RadarBlock.dart';
 
 class RadarOverlayWidget extends StatelessWidget {
   final MapWithRadarTile _tile;
+  final double _height;
 
-  RadarOverlayWidget(this._tile);
+  RadarOverlayWidget(this._tile, this._height);
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +15,12 @@ class RadarOverlayWidget extends StatelessWidget {
         fadeOutDuration: Duration(seconds: 3),
         imageUrl: _tile.mapUrlForTile,
         fit: BoxFit.scaleDown,
+        height: _height,
       ),
-      Image.network(
-        _tile.precipitationUrlForTile,
+      CachedNetworkImage(
+        imageUrl: _tile.precipitationUrlForTile,
         fit: BoxFit.scaleDown,
+        height: _height,
       ),
     ]);
   }
