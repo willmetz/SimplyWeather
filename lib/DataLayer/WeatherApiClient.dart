@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:ost_weather/Config/WeatherConfig.dart';
 import 'package:ost_weather/DataLayer/ExtendedForecast.dart';
-import 'package:ost_weather/DataLayer/HourlyForecast.dart';
+import 'package:ost_weather/DataLayer/WeatherLocale.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:ost_weather/DataLayer/Location.dart';
@@ -21,15 +21,20 @@ class WeatherApiClient {
   //private constructor to ensure this class is only created here
   WeatherApiClient._internal();
 
-  Future<HourlyForecast> getHourlyForecast(Location location) async {
-    final queryParams = {'lat': '${location.latitude}', 'lon': '${location.longitude}', 'APPID': '$OPEN_WEATHER_API_KEY', 'units': 'imperial'};
+  Future<WeatherLocale> getWeatherLocale(Location location) async {
+    final queryParams = {
+      'lat': '${location.latitude}',
+      'lon': '${location.longitude}',
+      'APPID': '$OPEN_WEATHER_API_KEY',
+      'units': 'imperial'
+    };
 
     final uri = Uri.https(_host, _path + "/forecast", queryParams);
 
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      return HourlyForecast.fromJson(json.decode(response.body));
+      return WeatherLocale.fromJson(json.decode(response.body));
     } else {
       log("Failed to get weather: ${response.reasonPhrase}");
     }
@@ -37,14 +42,19 @@ class WeatherApiClient {
     return null;
   }
 
-  Future<HourlyForecast> getHourlyForecastFromFile() async {
-    String weather = await rootBundle.loadString('assets/weather.json');
+  Future<WeatherLocale> getLocaleFromFile() async {
+    String weather = await rootBundle.loadString('assets/locale.json');
 
-    return HourlyForecast.fromJson(json.decode(weather));
+    return WeatherLocale.fromJson(json.decode(weather));
   }
 
   Future<ExtendedForecast> getExtendedForecast(Location location) async {
-    final queryParams = {'lat': '${location.latitude}', 'lon': '${location.longitude}', 'APPID': '$OPEN_WEATHER_API_KEY', 'units': 'imperial'};
+    final queryParams = {
+      'lat': '${location.latitude}',
+      'lon': '${location.longitude}',
+      'APPID': '$OPEN_WEATHER_API_KEY',
+      'units': 'imperial'
+    };
 
     final uri = Uri.https(_host, _path + "/onecall", queryParams);
 

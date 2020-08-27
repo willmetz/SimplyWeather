@@ -51,85 +51,90 @@ class RadarScreen extends StatelessWidget {
             if (radarData.state == RadarState.noLocationAvailable) {
               return locationRequired();
             }
-            return Column(
-              children: <Widget>[
-                Table(
-                  border: TableBorder(bottom: BorderSide.none, top: BorderSide.none, left: BorderSide.none, right: BorderSide.none),
-                  children: [
-                    TableRow(children: [
-                      RadarOverlayWidget(radarData.layeredTiles[0], rowHeight),
-                      RadarOverlayWidget(radarData.layeredTiles[1], rowHeight),
-                      RadarOverlayWidget(radarData.layeredTiles[2], rowHeight),
-                    ]),
-                    TableRow(children: [
-                      RadarOverlayWidget(radarData.layeredTiles[3], rowHeight),
-                      Stack(children: <Widget>[
-                        RadarOverlayWidget(radarData.layeredTiles[4], rowHeight),
-                        LayoutBuilder(
-                          builder: (context, constraints) {
-                            return Container(
-                              height: constraints.maxWidth,
-                              width: constraints.maxWidth,
-                              alignment: Alignment.center,
-                              child: CustomPaint(
-                                  size: Size(constraints.maxWidth, constraints.maxWidth),
-                                  painter: LocationPainter(radarData.layeredTiles[4].tile.xTileOffsetPercent, radarData.layeredTiles[4].tile.yTileOffsetPercent, Colors.pink)),
-                            );
-                          },
-                        ),
+            return Container(
+              color: Colors.grey[400],
+              child: Column(
+                children: <Widget>[
+                  Table(
+                    border: TableBorder(
+                        bottom: BorderSide.none, top: BorderSide.none, left: BorderSide.none, right: BorderSide.none),
+                    children: [
+                      TableRow(children: [
+                        RadarOverlayWidget(radarData.layeredTiles[0], rowHeight),
+                        RadarOverlayWidget(radarData.layeredTiles[1], rowHeight),
+                        RadarOverlayWidget(radarData.layeredTiles[2], rowHeight),
                       ]),
-                      RadarOverlayWidget(radarData.layeredTiles[5], rowHeight)
-                    ]),
-                    TableRow(children: [
-                      RadarOverlayWidget(radarData.layeredTiles[6], rowHeight),
-                      RadarOverlayWidget(radarData.layeredTiles[7], rowHeight),
-                      RadarOverlayWidget(radarData.layeredTiles[8], rowHeight)
-                    ])
-                  ],
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: RadarLegend("Rain", _rainColors, 15),
-                        )),
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                          child: RadarLegend("Snow", _snowColors, 15),
-                        )),
-                      ],
+                      TableRow(children: [
+                        RadarOverlayWidget(radarData.layeredTiles[3], rowHeight),
+                        Stack(children: <Widget>[
+                          RadarOverlayWidget(radarData.layeredTiles[4], rowHeight),
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              return Container(
+                                height: constraints.maxWidth,
+                                width: constraints.maxWidth,
+                                alignment: Alignment.center,
+                                child: CustomPaint(
+                                    size: Size(constraints.maxWidth, constraints.maxWidth),
+                                    painter: LocationPainter(radarData.layeredTiles[4].tile.xTileOffsetPercent,
+                                        radarData.layeredTiles[4].tile.yTileOffsetPercent, Colors.pink)),
+                              );
+                            },
+                          ),
+                        ]),
+                        RadarOverlayWidget(radarData.layeredTiles[5], rowHeight)
+                      ]),
+                      TableRow(children: [
+                        RadarOverlayWidget(radarData.layeredTiles[6], rowHeight),
+                        RadarOverlayWidget(radarData.layeredTiles[7], rowHeight),
+                        RadarOverlayWidget(radarData.layeredTiles[8], rowHeight)
+                      ])
+                    ],
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            child: RadarLegend("Rain", _rainColors, 15),
+                          )),
+                          Expanded(
+                              child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: RadarLegend("Snow", _snowColors, 15),
+                          )),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
-                        child: StreamBuilder<int>(
-                            stream: _bloc.zoomStream,
-                            initialData: 12,
-                            builder: (context, snapshot) {
-                              int zoom = snapshot.data;
-                              return Slider(
-                                min: 4,
-                                max: 16,
-                                value: zoom.toDouble(),
-                                divisions: 6,
-                                label: zoom.toString(),
-                                onChanged: (double value) {
-                                  _bloc.updateZoom(value.toInt());
-                                },
-                              );
-                            }),
-                      )),
-                )
-              ],
+                  Container(
+                    child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
+                          child: StreamBuilder<int>(
+                              stream: _bloc.zoomStream,
+                              initialData: 12,
+                              builder: (context, snapshot) {
+                                int zoom = snapshot.data;
+                                return Slider(
+                                  min: 4,
+                                  max: 16,
+                                  value: zoom.toDouble(),
+                                  divisions: 6,
+                                  label: zoom.toString(),
+                                  onChanged: (double value) {
+                                    _bloc.updateZoom(value.toInt());
+                                  },
+                                );
+                              }),
+                        )),
+                  )
+                ],
+              ),
             );
           }
         },

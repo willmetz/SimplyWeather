@@ -3,7 +3,7 @@ import 'package:ost_weather/Bloc/ExtendedForecastBloc.dart';
 import 'package:ost_weather/Bloc/bloc_provider.dart';
 import 'package:ost_weather/DataLayer/WeatherApiClient.dart';
 import 'package:ost_weather/Database/ExtendedForecastDAO.dart';
-import 'package:ost_weather/Database/HourlyForecastDAO.dart';
+import 'package:ost_weather/Database/WeatherLocaleDAO.dart';
 import 'package:ost_weather/Service/WeatherService.dart';
 import 'package:ost_weather/UI/Widgets/DailyForecastDetailsTitleWidget.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
@@ -12,8 +12,8 @@ import 'Widgets/DailyForecastDetailsCellWidget.dart';
 import 'Widgets/ForecastWidgets.dart';
 
 class ForecastScreen extends StatelessWidget {
-  final ExtendedForecastBloc _forecastBloc =
-      new ExtendedForecastBloc(WeatherService(WeatherApiClient(), ExtendedForecastDAO(), HourlyForecstDAO()), AppPreferences());
+  final ExtendedForecastBloc _forecastBloc = new ExtendedForecastBloc(
+      WeatherService(WeatherApiClient(), ExtendedForecastDAO(), WeatherLocaleDAO()), AppPreferences());
 
   ForecastScreen() {
     WidgetsBinding.instance.addPostFrameCallback(_onLayoutDone);
@@ -59,7 +59,7 @@ class ForecastScreen extends StatelessWidget {
           itemCount: data.extendedForecast.length,
           itemBuilder: (context, index) {
             return Card(
-              color: Colors.lightBlue,
+              color: Colors.grey[300],
               child: Column(
                 children: <Widget>[
                   DailyForecastDetailsTitleWidget(data.extendedForecast[index]),

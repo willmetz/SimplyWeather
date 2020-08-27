@@ -17,7 +17,8 @@ class CurrentConditionsWidget extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Container(
-              decoration: BoxDecoration(border: Border.all(color: Colors.blue[300], width: 2), borderRadius: BorderRadius.circular(10.0)),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue[300], width: 2), borderRadius: BorderRadius.circular(10.0)),
               child: Container(
                 child: Row(
                   children: <Widget>[
@@ -27,7 +28,9 @@ class CurrentConditionsWidget extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Container(padding: EdgeInsets.fromLTRB(0, 0, 0, 5), child: Text("${homeData.currentTemperature}\u00b0")),
+                            Container(
+                                padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                child: Text("${homeData.currentTemperature.toInt()}\u00b0")),
                             Container(
                               child: Text("${homeData.currentWindSpeed} mph"),
                               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
@@ -71,13 +74,13 @@ class CurrentConditionsWidget extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     child: Text(
-                      "Feels Like: ${homeData.feelsLikeTemperature}\u00b0",
+                      "Feels Like: ${homeData.feelsLikeTemperature.toInt()}\u00b0",
                       style: TextStyle(fontSize: 15),
                       textAlign: TextAlign.end,
                     ),
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                   ),
-                  Text("${homeData.lowForDay}\u00b0/${homeData.hiForDay}\u00b0")
+                  Text("${homeData.hiForDay.toInt()}\u00b0/${homeData.lowForDay.toInt()}\u00b0")
                 ],
               ),
             ),

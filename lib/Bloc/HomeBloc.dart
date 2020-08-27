@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:intl/intl.dart';
 import 'package:ost_weather/Bloc/Bloc.dart';
-import 'package:ost_weather/DataLayer/HourlyForecast.dart';
+import 'package:ost_weather/DataLayer/ExtendedForecast.dart';
+import 'package:ost_weather/DataLayer/WeatherLocale.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/Service/WeatherService.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
@@ -54,11 +55,15 @@ class HomeBloc implements Bloc {
   }
 
   Future<HomeData> _getForecast(Location location) async {
-    final HourlyForecast forecast = await _weatherService.getHourlyForecast(location);
+    final WeatherLocale weatherLocale = await _weatherService.getWeatherLocale(location);
+    final ExtendedForecast extendedForecast = await _weatherService.getExtendedForecast(location);
+
+    //get the current conditions for today
+    final CurrentConditions currentConditions = extendedForecast.currentConditions;
 
     //find all forecast details for today
     //final today = DateTime.now();
-    final today = DateTime.fromMillisecondsSinceEpoch(forecast.forecastIntervals[0].timeStampUTC * 1000, isUtc: false);
+    final today = DateTime.fromMillisecondsSinceEpoch(currentConditions.timeStampUTC * 1000, isUtc: false);
 
     HomeData homeData = HomeData();
     homeData.forecastWindows = new List<ForecastWindow>();
@@ -66,37 +71,37 @@ class HomeBloc implements Bloc {
     //seed hi and low temps
     homeData.hiForDay = -999;
     homeData.lowForDay = 999;
-    bool currentWeatherSet = false;
-    homeData.city = forecast.locationInformation.cityName;
+    homeData.city = weatherLocale.locationInformation.cityName;
 
-    forecast.forecastIntervals.forEach((f) {
+    homeData.currentTemperature = currentConditions.currentTemperature;
+    homeData.currentWindSpeed = currentConditions.windSpeed;
+
+    //the weather details are an arrey, should only be one
+    //TODO protect against index out of bounds
+    homeData.currentConditionsDescription = currentConditions.weather[0].description;
+    homeData.currentConditionsImageCode = currentConditions.weather[0].imageCode;
+
+    homeData.feelsLikeTemperature = currentConditions.feelsLikeTemperature;
+
+    extendedForecast.hourlyForecast.forEach((hourlyWindow) {
       //get the forecasted time in local time (given in UTC)
-      DateTime ft = DateTime.fromMillisecondsSinceEpoch(f.timeStampUTC * 1000, isUtc: false);
+      DateTime ft = DateTime.fromMillisecondsSinceEpoch(hourlyWindow.timeStampUTC * 1000, isUtc: false);
 
       if (today.day == ft.day) {
         DateFormat dateFormat = DateFormat.jm();
-        final ForecastWindow fw = ForecastWindow(
-            dateFormat.format(ft), dateFormat.format(ft.add(new Duration(hours: 3))), f.weatherReadings.temperatureFarenheit, f.weather[0].imageCode);
+
+        //TODO protect agains index out of bounds
+        final ForecastWindow fw = ForecastWindow(dateFormat.format(ft), hourlyWindow.temperatureFarenheit,
+            hourlyWindow.weather[0].imageCode, hourlyWindow.probabilityOfPercipitation);
+
         homeData.forecastWindows.add(fw);
 
-        //the first forecast found should be current conditions, set it accordinly if it hasn't been set
-        if (!currentWeatherSet) {
-          currentWeatherSet = true;
-          homeData.currentTemperature = f.weatherReadings.temperatureFarenheit;
-          homeData.currentWindSpeed = f.windDetails.windSpeed;
-
-          //the weather details are an arrey, need to look into what multiple of these mean
-          homeData.currentConditionsDescription = f.weather[0].description;
-          homeData.currentConditionsImageCode = f.weather[0].imageCode;
-          homeData.feelsLikeTemperature = f.weatherReadings.feelsLike;
+        if (homeData.hiForDay < hourlyWindow.temperatureFarenheit) {
+          homeData.hiForDay = hourlyWindow.temperatureFarenheit;
         }
 
-        if (homeData.hiForDay < f.weatherReadings.temperatureFarenheit) {
-          homeData.hiForDay = f.weatherReadings.temperatureFarenheit;
-        }
-
-        if (homeData.lowForDay > f.weatherReadings.temperatureFarenheit) {
-          homeData.lowForDay = f.weatherReadings.temperatureFarenheit;
+        if (homeData.lowForDay > hourlyWindow.temperatureFarenheit) {
+          homeData.lowForDay = hourlyWindow.temperatureFarenheit;
         }
       }
     });
@@ -141,13 +146,13 @@ class HomeData {
 
 class ForecastWindow {
   final String windowStartHour;
-  final String windowEndHour;
   final double temp;
   final String imageCode;
+  final double chanceOfPrecipitation;
 
   String get imageUrl {
     return getImageUrlFromIconCode(imageCode);
   }
 
-  ForecastWindow(this.windowStartHour, this.windowEndHour, this.temp, this.imageCode);
+  ForecastWindow(this.windowStartHour, this.temp, this.imageCode, this.chanceOfPrecipitation);
 }

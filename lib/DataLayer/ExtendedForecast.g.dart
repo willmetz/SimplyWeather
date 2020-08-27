@@ -15,14 +15,82 @@ ExtendedForecast _$ExtendedForecastFromJson(Map<String, dynamic> json) {
         ?.toList(),
     json['timezone'] as String,
     json['retrievedAtTimeStamp'] as int,
-  );
+  )
+    ..hourlyForecast = (json['hourly'] as List)
+        ?.map((e) => e == null
+            ? null
+            : HourlyForecast.fromJson(e as Map<String, dynamic>))
+        ?.toList()
+    ..currentConditions = json['current'] == null
+        ? null
+        : CurrentConditions.fromJson(json['current'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$ExtendedForecastToJson(ExtendedForecast instance) =>
     <String, dynamic>{
       'retrievedAtTimeStamp': instance.retrievedAtTimeStamp,
       'daily': instance.dailyForecasts?.map((e) => e?.toJson())?.toList(),
+      'hourly': instance.hourlyForecast?.map((e) => e?.toJson())?.toList(),
+      'current': instance.currentConditions?.toJson(),
       'timezone': instance.forecastTimezone,
+    };
+
+CurrentConditions _$CurrentConditionsFromJson(Map<String, dynamic> json) {
+  return CurrentConditions(
+    (json['temp'] as num)?.toDouble() ?? 0,
+    (json['feels_like'] as num)?.toDouble() ?? 0,
+    (json['humidity'] as num)?.toDouble() ?? 0,
+    json['sunrise'] as int ?? 0,
+    json['sunset'] as int ?? 0,
+    json['dt'] as int ?? 0,
+    (json['weather'] as List)
+        ?.map((e) =>
+            e == null ? null : Weather.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    (json['wind_deg'] as num)?.toDouble() ?? 0,
+    (json['wind_speed'] as num)?.toDouble() ?? 0,
+  );
+}
+
+Map<String, dynamic> _$CurrentConditionsToJson(CurrentConditions instance) =>
+    <String, dynamic>{
+      'dt': instance.timeStampUTC,
+      'sunrise': instance.sunriseUTC,
+      'sunset': instance.sunsetUTC,
+      'temp': instance.currentTemperature,
+      'feels_like': instance.feelsLikeTemperature,
+      'humidity': instance.humidity,
+      'wind_speed': instance.windSpeed,
+      'wind_deg': instance.windDirection,
+      'weather': instance.weather?.map((e) => e?.toJson())?.toList(),
+    };
+
+HourlyForecast _$HourlyForecastFromJson(Map<String, dynamic> json) {
+  return HourlyForecast(
+    (json['feels_like'] as num)?.toDouble() ?? 0,
+    (json['weather'] as List)
+        ?.map((e) =>
+            e == null ? null : Weather.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    (json['humidity'] as num)?.toDouble() ?? 0,
+    (json['pop'] as num)?.toDouble() ?? 0,
+    (json['temp'] as num)?.toDouble() ?? 0,
+    json['dt'] as int,
+    (json['wind_deg'] as num)?.toDouble() ?? 0,
+    (json['wind_speed'] as num)?.toDouble() ?? 0,
+  );
+}
+
+Map<String, dynamic> _$HourlyForecastToJson(HourlyForecast instance) =>
+    <String, dynamic>{
+      'dt': instance.timeStampUTC,
+      'temp': instance.temperatureFarenheit,
+      'feels_like': instance.feelsLike,
+      'humidity': instance.humidity,
+      'wind_speed': instance.windSpeed,
+      'wind_deg': instance.windDirection,
+      'weather': instance.weather?.map((e) => e?.toJson())?.toList(),
+      'pop': instance.probabilityOfPercipitation,
     };
 
 DailyForecast _$DailyForecastFromJson(Map<String, dynamic> json) {
@@ -68,4 +136,18 @@ Map<String, dynamic> _$DailyTemperatureRangeToJson(
       'max': instance.hiTemp,
       'night': instance.nightTemp,
       'eve': instance.eveningTemp,
+    };
+
+Weather _$WeatherFromJson(Map<String, dynamic> json) {
+  return Weather(
+    json['main'] as String ?? '',
+    json['description'] as String ?? '',
+    json['icon'] as String ?? '',
+  );
+}
+
+Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
+      'main': instance.condition,
+      'description': instance.description,
+      'icon': instance.imageCode,
     };

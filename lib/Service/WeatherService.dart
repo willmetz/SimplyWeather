@@ -1,21 +1,23 @@
 import 'package:ost_weather/DataLayer/ExtendedForecast.dart';
-import 'package:ost_weather/DataLayer/HourlyForecast.dart';
+import 'package:ost_weather/DataLayer/WeatherLocale.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/DataLayer/WeatherApiClient.dart';
 import 'package:ost_weather/Database/ExtendedForecastDAO.dart';
-import 'package:ost_weather/Database/HourlyForecastDAO.dart';
+import 'package:ost_weather/Database/WeatherLocaleDAO.dart';
 
 class WeatherService {
   static final Map<String, WeatherService> _cache = <String, WeatherService>{};
 
   final WeatherApiClient _weatherApiClient;
   final ExtendedForecastDAO _extendedForecastDAO;
-  final HourlyForecstDAO _hourlyForecstDAO;
+  final WeatherLocaleDAO _weatherLocaleDAO;
 
-  WeatherService._internal(this._extendedForecastDAO, this._weatherApiClient, this._hourlyForecstDAO);
+  WeatherService._internal(this._extendedForecastDAO, this._weatherApiClient, this._weatherLocaleDAO);
 
-  factory WeatherService(WeatherApiClient weatherApiClient, ExtendedForecastDAO extendedForecastDAO, HourlyForecstDAO hourlyForecstDAO) {
-    return _cache.putIfAbsent("WeatherService", () => WeatherService._internal(extendedForecastDAO, weatherApiClient, hourlyForecstDAO));
+  factory WeatherService(
+      WeatherApiClient weatherApiClient, ExtendedForecastDAO extendedForecastDAO, WeatherLocaleDAO hourlyForecstDAO) {
+    return _cache.putIfAbsent(
+        "WeatherService", () => WeatherService._internal(extendedForecastDAO, weatherApiClient, hourlyForecstDAO));
   }
 
   Future<ExtendedForecast> getExtendedForecast(Location location) async {
@@ -42,29 +44,29 @@ class WeatherService {
     return extendedForecast;
   }
 
-  Future<HourlyForecast> getHourlyForecast(Location location) async {
-    HourlyForecast forecast = await _hourlyForecstDAO.getForecast();
+  Future<WeatherLocale> getWeatherLocale(Location location) async {
+    WeatherLocale locale = await _weatherLocaleDAO.getWeatherLocale();
 
-    if (forecast != null && forecast.retrievedAtTimeStamp != null) {
-      DateTime retrievedAt = DateTime.fromMillisecondsSinceEpoch(forecast.retrievedAtTimeStamp);
+    if (locale != null && locale.retrievedAtTimeStamp != null) {
+      DateTime retrievedAt = DateTime.fromMillisecondsSinceEpoch(locale.retrievedAtTimeStamp);
 
       if (retrievedAt != null && retrievedAt.add(Duration(minutes: 15)).isAfter(DateTime.now())) {
-        return forecast;
+        return locale;
       }
     }
 
     //cache is empty or expired, retrieve new data
     if (location != null && location.latitude != null && location.longitude != null) {
-      forecast = await _weatherApiClient.getHourlyForecast(location);
+      locale = await _weatherApiClient.getWeatherLocale(location);
     }
 
-    if (forecast != null) {
-      forecast.retrievedAtTimeStamp = DateTime.now().millisecondsSinceEpoch;
+    if (locale != null) {
+      locale.retrievedAtTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
       //save to the db
-      await _hourlyForecstDAO.addForecast(forecast);
+      await _weatherLocaleDAO.addWeatherLocale(locale);
     }
 
-    return forecast;
+    return locale;
   }
 }
