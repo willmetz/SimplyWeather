@@ -37,7 +37,7 @@ class ForecastScreen extends StatelessWidget {
             case ExtendedForecastState.loading:
               return loading("Loading Forecast");
             case ExtendedForecastState.locationRequired:
-              return locationRequired();
+              return locationRequired(context);
             case ExtendedForecastState.forecastReady:
               return showExtendedForecast(data);
             case ExtendedForecastState.forecastError:

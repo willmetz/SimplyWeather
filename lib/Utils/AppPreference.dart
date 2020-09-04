@@ -2,6 +2,10 @@ import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppPreferences {
+  final String _latitudeKey = "latitude";
+  final String _longitudeKey = "longitude";
+  final String _locationNameKey = "locationName";
+
   static final AppPreferences _instance = AppPreferences._internal();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -15,22 +19,34 @@ class AppPreferences {
   Future<bool> saveLocation(Location location) async {
     SharedPreferences sharedPreferences = await _prefs;
 
-    sharedPreferences.setInt("zip", location.zipCode);
-    sharedPreferences.setDouble("latitude", location.latitude);
-    sharedPreferences.setDouble("longitude", location.longitude);
+    bool savedLatitude = await sharedPreferences.setDouble(_latitudeKey, location.latitude);
+    bool savedLongitude = await sharedPreferences.setDouble(_longitudeKey, location.longitude);
+
+    return savedLatitude && savedLongitude;
   }
 
   Future<Location> getLocation() async {
     SharedPreferences sharedPreferences = await _prefs;
 
-    int zip = sharedPreferences.getInt("zip");
-    double long = sharedPreferences.getDouble("longitude");
-    double lat = sharedPreferences.getDouble("latitude");
+    double long = sharedPreferences.getDouble(_longitudeKey);
+    double lat = sharedPreferences.getDouble(_latitudeKey);
 
-    if (zip == null && lat == null && long == null) {
+    if (lat == null && long == null) {
       return null;
     } else {
-      return Location.allForms(zip, long, lat);
+      return Location.fromGeoInfo(lat, long);
     }
+  }
+
+  Future<bool> saveLocationName(String locationName) async {
+    SharedPreferences sharedPreferences = await _prefs;
+
+    return await sharedPreferences.setString(_locationNameKey, locationName);
+  }
+
+  Future<String> getLocationName() async {
+    SharedPreferences sharedPreferences = await _prefs;
+
+    return sharedPreferences.getString(_locationNameKey);
   }
 }

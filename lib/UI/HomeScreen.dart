@@ -35,7 +35,7 @@ class HomeScreen extends StatelessWidget {
 
                   switch (results.homeState) {
                     case HomeState.noLocationAvailable:
-                      return locationRequired();
+                      return locationRequired(context);
                     case HomeState.currentConditionsAvailable:
                       return _showCurrentWeather(results.homeData);
                     case HomeState.errorRetrievingConditions:

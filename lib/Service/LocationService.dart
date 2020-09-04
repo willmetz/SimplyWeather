@@ -15,14 +15,18 @@ class LocationService {
 
   Future<Location> getCurrentLocation() async {
     _geolocator.forceAndroidLocationManager = true;
-    Position position = await _geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.medium, locationPermissionLevel: GeolocationPermission.locationWhenInUse)
-        .timeout(Duration(seconds: 10))
-        .catchError((error) => _geolocator.getLastKnownPosition());
 
-    if (position != null) {
-      return Location.fromGeoInfo(position.latitude, position.longitude);
-    }
+    try {
+      Position position = await _geolocator
+          .getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.medium, locationPermissionLevel: GeolocationPermission.locationWhenInUse)
+          .timeout(Duration(seconds: 10))
+          .catchError((error) => _geolocator.getLastKnownPosition());
+
+      if (position != null) {
+        return Location.fromGeoInfo(position.latitude, position.longitude);
+      }
+    } catch (PlatformException) {}
 
     return null;
   }

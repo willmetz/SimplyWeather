@@ -1,26 +1,35 @@
 import 'package:ost_weather/DataLayer/ExtendedForecast.dart';
+import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/Database/WeatherDatabase.dart';
 import 'package:sembast/sembast.dart';
 
 class ExtendedForecastDAO {
   static const String FOLDER_NAME = "extendedForecast";
-  static const int FORECAST_KEY = 1;
+  //static const int FORECAST_KEY = 1;
   final _extendedForecastFolder = intMapStoreFactory.store(FOLDER_NAME);
 
   Future<Database> get _db async => await WeatherDatabase().getDatabase();
 
-  Future addForecast(ExtendedForecast extendedForecast) async {
+  Future addForecast(ExtendedForecast extendedForecast, Location location) async {
     var data = extendedForecast.toJson();
-    await _extendedForecastFolder.record(FORECAST_KEY).put(await _db, data);
+    await _extendedForecastFolder.record(_forecastKey(location)).put(await _db, data);
   }
 
-  Future<ExtendedForecast> getForecast() async {
-    final snapshot = await _extendedForecastFolder.record(FORECAST_KEY).get(await _db);
+  Future<ExtendedForecast> getForecast(Location location) async {
+    final snapshot = await _extendedForecastFolder.record(_forecastKey(location)).get(await _db);
 
     if (snapshot != null && snapshot.length > 0) {
       return ExtendedForecast.fromJson(snapshot);
+    } else {
+      //TODO clear out DB
     }
 
     return null;
+  }
+
+  int _forecastKey(Location location) {
+    int key = "${location.latitude.toString()}-${location.longitude.toString()}".hashCode;
+
+    return key;
   }
 }

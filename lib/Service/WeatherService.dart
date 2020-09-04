@@ -21,7 +21,7 @@ class WeatherService {
   }
 
   Future<ExtendedForecast> getExtendedForecast(Location location) async {
-    ExtendedForecast extendedForecast = await _extendedForecastDAO.getForecast();
+    ExtendedForecast extendedForecast = await _extendedForecastDAO.getForecast(location);
 
     if (extendedForecast != null) {
       DateTime retrievedAt = DateTime.fromMillisecondsSinceEpoch(extendedForecast.retrievedAtTimeStamp);
@@ -38,14 +38,14 @@ class WeatherService {
       extendedForecast.retrievedAtTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
       //save to the db
-      await _extendedForecastDAO.addForecast(extendedForecast);
+      await _extendedForecastDAO.addForecast(extendedForecast, location);
     }
 
     return extendedForecast;
   }
 
   Future<WeatherLocale> getWeatherLocale(Location location) async {
-    WeatherLocale locale = await _weatherLocaleDAO.getWeatherLocale();
+    WeatherLocale locale = await _weatherLocaleDAO.getWeatherLocale(location);
 
     if (locale != null && locale.retrievedAtTimeStamp != null) {
       DateTime retrievedAt = DateTime.fromMillisecondsSinceEpoch(locale.retrievedAtTimeStamp);
@@ -64,7 +64,7 @@ class WeatherService {
       locale.retrievedAtTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
       //save to the db
-      await _weatherLocaleDAO.addWeatherLocale(locale);
+      await _weatherLocaleDAO.addWeatherLocale(locale, location);
     }
 
     return locale;

@@ -1,7 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'WeatherLocale.dart';
-
 /// This allows the `ExtendedForecast` class to access private members in
 /// the generated file. The value for this is *.g.dart, where
 /// the star denotes the source file name.
@@ -9,7 +7,7 @@ part 'ExtendedForecast.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ExtendedForecast {
-  ExtendedForecast(this.dailyForecasts, this.forecastTimezone, this.retrievedAtTimeStamp);
+  ExtendedForecast(this.dailyForecasts, this.hourlyForecast, this.currentConditions, this.forecastTimezone);
 
   //This does not come from the service butis needed to record timestamp
   int retrievedAtTimeStamp;
@@ -41,8 +39,8 @@ class ExtendedForecast {
 
 @JsonSerializable(explicitToJson: true)
 class CurrentConditions {
-  CurrentConditions(this.currentTemperature, this.feelsLikeTemperature, this.humidity, this.sunriseUTC, this.sunsetUTC,
-      this.timeStampUTC, this.weather, this.windDirection, this.windSpeed);
+  CurrentConditions(this.timeStampUTC, this.sunriseUTC, this.sunsetUTC, this.currentTemperature, this.feelsLikeTemperature,
+      this.humidity, this.windSpeed, this.windDirection, this.weather);
 
   @JsonKey(name: 'dt', defaultValue: 0)
   int timeStampUTC;
@@ -84,8 +82,8 @@ class CurrentConditions {
 
 @JsonSerializable(explicitToJson: true)
 class HourlyForecast {
-  HourlyForecast(this.feelsLike, this.weather, this.humidity, this.probabilityOfPercipitation, this.temperatureFarenheit,
-      this.timeStampUTC, this.windDirection, this.windSpeed);
+  HourlyForecast(this.timeStampUTC, this.temperatureFarenheit, this.feelsLike, this.humidity, this.windSpeed,
+      this.windDirection, this.weather, this.probabilityOfPercipitation);
 
   @JsonKey(name: 'dt')
   int timeStampUTC;
@@ -124,7 +122,7 @@ class HourlyForecast {
 
 @JsonSerializable(explicitToJson: true)
 class DailyForecast {
-  DailyForecast(this.weather, this.windSpeed, this.dailyTemperatureRange, this.utcTimeStamp, this.windDirectionDegrees);
+  DailyForecast(this.dailyTemperatureRange, this.utcTimeStamp, this.windSpeed, this.windDirectionDegrees, this.weather);
 
   @JsonKey(name: 'temp')
   DailyTemperatureRange dailyTemperatureRange;
@@ -154,7 +152,7 @@ class DailyForecast {
 
 @JsonSerializable(explicitToJson: true)
 class DailyTemperatureRange {
-  DailyTemperatureRange(this.dayTimeTemp, this.hiTemp, this.lowTemp, this.eveningTemp, this.nightTemp);
+  DailyTemperatureRange(this.dayTimeTemp, this.lowTemp, this.hiTemp, this.nightTemp, this.eveningTemp);
 
   @JsonKey(name: 'day')
   double dayTimeTemp;

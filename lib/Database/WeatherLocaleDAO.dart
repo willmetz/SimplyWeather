@@ -1,3 +1,4 @@
+import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:ost_weather/DataLayer/WeatherLocale.dart';
 import 'package:sembast/sembast.dart';
 
@@ -10,12 +11,12 @@ class WeatherLocaleDAO {
 
   Future<Database> get _db async => await WeatherDatabase().getDatabase();
 
-  Future addWeatherLocale(WeatherLocale locale) async {
+  Future addWeatherLocale(WeatherLocale locale, Location location) async {
     var data = locale.toJson();
     await _weatherLocaleFolder.record(WEATHER_LOCALE_KEY).put(await _db, data);
   }
 
-  Future<WeatherLocale> getWeatherLocale() async {
+  Future<WeatherLocale> getWeatherLocale(Location location) async {
     final snapshot = await _weatherLocaleFolder.record(WEATHER_LOCALE_KEY).get(await _db);
 
     if (snapshot != null && snapshot.length > 0) {
@@ -23,5 +24,9 @@ class WeatherLocaleDAO {
     }
 
     return null;
+  }
+
+  int getWeatherLocaleKey(Location location) {
+    return "${location.latitude.toString()}-${location.longitude.toString()}".hashCode;
   }
 }

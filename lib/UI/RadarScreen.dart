@@ -49,7 +49,7 @@ class RadarScreen extends StatelessWidget {
             );
           } else {
             if (radarData.state == RadarState.noLocationAvailable) {
-              return locationRequired();
+              return locationRequired(context);
             }
             return Container(
               color: Colors.grey[400],

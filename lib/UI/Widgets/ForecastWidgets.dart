@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../LocationScreen.dart';
+
 Widget loading(String text) {
   return Container(
-      color: Colors.blue,
+      color: Color.fromRGBO(40, 44, 52, 0.9),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -19,7 +21,7 @@ Widget loading(String text) {
               padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
               child: Text(
                 text,
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 15, color: Colors.white),
               ),
             )
           ],
@@ -27,15 +29,31 @@ Widget loading(String text) {
       ));
 }
 
-Widget locationRequired() {
+Widget locationRequired(BuildContext context) {
   return Container(
       color: Colors.blue,
-      child: Center(
-        child: Text(
-          "Please set a location to view the weather",
-          style: TextStyle(fontSize: 24),
-          textAlign: TextAlign.center,
-        ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Please set a location to view the weather",
+                  style: TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+                FlatButton(
+                  child: Text(
+                    "Update Location",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => LocationScreen())),
+                )
+              ],
+            ),
+          ),
+        ],
       ));
 }
 

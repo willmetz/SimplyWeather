@@ -13,17 +13,16 @@ ExtendedForecast _$ExtendedForecastFromJson(Map<String, dynamic> json) {
             ? null
             : DailyForecast.fromJson(e as Map<String, dynamic>))
         ?.toList(),
-    json['timezone'] as String,
-    json['retrievedAtTimeStamp'] as int,
-  )
-    ..hourlyForecast = (json['hourly'] as List)
+    (json['hourly'] as List)
         ?.map((e) => e == null
             ? null
             : HourlyForecast.fromJson(e as Map<String, dynamic>))
-        ?.toList()
-    ..currentConditions = json['current'] == null
+        ?.toList(),
+    json['current'] == null
         ? null
-        : CurrentConditions.fromJson(json['current'] as Map<String, dynamic>);
+        : CurrentConditions.fromJson(json['current'] as Map<String, dynamic>),
+    json['timezone'] as String,
+  )..retrievedAtTimeStamp = json['retrievedAtTimeStamp'] as int;
 }
 
 Map<String, dynamic> _$ExtendedForecastToJson(ExtendedForecast instance) =>
@@ -37,18 +36,18 @@ Map<String, dynamic> _$ExtendedForecastToJson(ExtendedForecast instance) =>
 
 CurrentConditions _$CurrentConditionsFromJson(Map<String, dynamic> json) {
   return CurrentConditions(
+    json['dt'] as int ?? 0,
+    json['sunrise'] as int ?? 0,
+    json['sunset'] as int ?? 0,
     (json['temp'] as num)?.toDouble() ?? 0,
     (json['feels_like'] as num)?.toDouble() ?? 0,
     (json['humidity'] as num)?.toDouble() ?? 0,
-    json['sunrise'] as int ?? 0,
-    json['sunset'] as int ?? 0,
-    json['dt'] as int ?? 0,
+    (json['wind_speed'] as num)?.toDouble() ?? 0,
+    (json['wind_deg'] as num)?.toDouble() ?? 0,
     (json['weather'] as List)
         ?.map((e) =>
             e == null ? null : Weather.fromJson(e as Map<String, dynamic>))
         ?.toList(),
-    (json['wind_deg'] as num)?.toDouble() ?? 0,
-    (json['wind_speed'] as num)?.toDouble() ?? 0,
   );
 }
 
@@ -67,17 +66,17 @@ Map<String, dynamic> _$CurrentConditionsToJson(CurrentConditions instance) =>
 
 HourlyForecast _$HourlyForecastFromJson(Map<String, dynamic> json) {
   return HourlyForecast(
+    json['dt'] as int,
+    (json['temp'] as num)?.toDouble() ?? 0,
     (json['feels_like'] as num)?.toDouble() ?? 0,
+    (json['humidity'] as num)?.toDouble() ?? 0,
+    (json['wind_speed'] as num)?.toDouble() ?? 0,
+    (json['wind_deg'] as num)?.toDouble() ?? 0,
     (json['weather'] as List)
         ?.map((e) =>
             e == null ? null : Weather.fromJson(e as Map<String, dynamic>))
         ?.toList(),
-    (json['humidity'] as num)?.toDouble() ?? 0,
     (json['pop'] as num)?.toDouble() ?? 0,
-    (json['temp'] as num)?.toDouble() ?? 0,
-    json['dt'] as int,
-    (json['wind_deg'] as num)?.toDouble() ?? 0,
-    (json['wind_speed'] as num)?.toDouble() ?? 0,
   );
 }
 
@@ -95,16 +94,16 @@ Map<String, dynamic> _$HourlyForecastToJson(HourlyForecast instance) =>
 
 DailyForecast _$DailyForecastFromJson(Map<String, dynamic> json) {
   return DailyForecast(
-    (json['weather'] as List)
-        ?.map((e) =>
-            e == null ? null : Weather.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-    (json['wind_speed'] as num)?.toDouble(),
     json['temp'] == null
         ? null
         : DailyTemperatureRange.fromJson(json['temp'] as Map<String, dynamic>),
     json['dt'] as int,
+    (json['wind_speed'] as num)?.toDouble(),
     json['wind_deg'] as int,
+    (json['weather'] as List)
+        ?.map((e) =>
+            e == null ? null : Weather.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
   );
 }
 
@@ -121,10 +120,10 @@ DailyTemperatureRange _$DailyTemperatureRangeFromJson(
     Map<String, dynamic> json) {
   return DailyTemperatureRange(
     (json['day'] as num)?.toDouble(),
-    (json['max'] as num)?.toDouble(),
     (json['min'] as num)?.toDouble(),
-    (json['eve'] as num)?.toDouble(),
+    (json['max'] as num)?.toDouble(),
     (json['night'] as num)?.toDouble(),
+    (json['eve'] as num)?.toDouble(),
   );
 }
 
