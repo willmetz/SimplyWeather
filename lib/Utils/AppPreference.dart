@@ -5,6 +5,7 @@ class AppPreferences {
   final String _latitudeKey = "latitude";
   final String _longitudeKey = "longitude";
   final String _locationNameKey = "locationName";
+  final String _zoomKey = "zoom";
 
   static final AppPreferences _instance = AppPreferences._internal();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -30,7 +31,7 @@ class AppPreferences {
 
     double long = sharedPreferences.getDouble(_longitudeKey);
     double lat = sharedPreferences.getDouble(_latitudeKey);
-
+s
     if (lat == null && long == null) {
       return null;
     } else {
@@ -48,5 +49,17 @@ class AppPreferences {
     SharedPreferences sharedPreferences = await _prefs;
 
     return sharedPreferences.getString(_locationNameKey);
+  }
+
+  Future<int> getZoom(int defaultZoom) async {
+    SharedPreferences sharedPreferences = await _prefs;
+
+    return sharedPreferences.getInt(_zoomKey) ?? defaultZoom;
+  }
+
+  Future<bool> saveZoom(int zoom) async {
+    SharedPreferences sharedPreferences = await _prefs;
+
+    return await sharedPreferences.setInt(_zoomKey, zoom);
   }
 }

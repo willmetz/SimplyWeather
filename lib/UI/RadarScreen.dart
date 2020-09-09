@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ost_weather/Bloc/RadarBlock.dart';
+import 'package:ost_weather/Bloc/RadarBloc.dart';
 import 'package:ost_weather/Bloc/bloc_provider.dart';
+import 'package:ost_weather/Service/LocationService.dart';
 import 'package:ost_weather/UI/Widgets/ForecastWidgets.dart';
 import 'package:ost_weather/UI/Widgets/LocationPainter.dart';
 import 'package:ost_weather/UI/Widgets/RadarLegend.dart';
@@ -8,7 +9,7 @@ import 'package:ost_weather/UI/Widgets/RadarOverlayWidget.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
 
 class RadarScreen extends StatelessWidget {
-  final RadarBloc _bloc = RadarBloc(AppPreferences());
+  final RadarBloc _bloc = RadarBloc(AppPreferences(), LocationService());
   List<LegendColor> _rainColors, _snowColors;
 
   RadarScreen() {
@@ -43,7 +44,7 @@ class RadarScreen extends StatelessWidget {
           final RadarData radarData = snapshot.data;
 
           if (radarData == null) {
-            _bloc.getLatestRadar(12);
+            _bloc.getLatestRadar();
             return Center(
               child: Text("Loading..."),
             );
@@ -117,7 +118,7 @@ class RadarScreen extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
                           child: StreamBuilder<int>(
                               stream: _bloc.zoomStream,
-                              initialData: 12,
+                              initialData: _bloc.defaultZoom,
                               builder: (context, snapshot) {
                                 int zoom = snapshot.data;
                                 return Slider(

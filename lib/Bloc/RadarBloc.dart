@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/Config/WeatherConfig.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
+import 'package:ost_weather/Service/LocationService.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
 import 'dart:math';
 
@@ -10,27 +11,48 @@ import 'package:ost_weather/Utils/MathUtils.dart';
 
 class RadarBloc implements Bloc {
   final AppPreferences _appPreferences;
+  final LocationService _locationService;
   final _controller = StreamController<RadarData>();
   final _zoomController = StreamController<int>();
+  final defaultZoom = 12;
   RadarData _data;
 
   Stream<RadarData> get stream => _controller.stream;
   Stream<int> get zoomStream => _zoomController.stream;
+  StreamSubscription<Location> _locationEventStream;
 
-  RadarBloc(this._appPreferences) {
+  RadarBloc(this._appPreferences, this._locationService) {
     _data = new RadarData();
     _data.state = RadarState.init;
+
+    _locationEventStream = _locationService.locationChangeEventStream.listen((location) {
+      if (location != null) {
+        getLatestRadar(providedLocation: location);
+      }
+    });
   }
 
   RadarData currentState() => _data;
 
-  void updateZoom(int zoom) {
+  void fetchPreviousZoom() async {
+    int zoom = await _appPreferences.getZoom(defaultZoom);
     _zoomController.sink.add(zoom);
-    getLatestRadar(zoom);
   }
 
-  void getLatestRadar(int zoom) async {
-    Location location = await _appPreferences.getLocation();
+  void updateZoom(int zoom) async {
+    await _appPreferences.saveZoom(zoom);
+    _zoomController.sink.add(zoom);
+    getLatestRadar();
+  }
+
+  void getLatestRadar({Location providedLocation}) async {
+    Location location = providedLocation;
+
+    if (location == null) {
+      await _appPreferences.getLocation();
+    }
+
+    int zoom = await _appPreferences.getZoom(_defaultZoom);
 
     if (location != null) {
       Tile centerTile = getCenterTile(zoom, location.latitude, location.longitude);
@@ -97,6 +119,7 @@ class RadarBloc implements Bloc {
   void dispose() {
     _controller.close();
     _zoomController.close();
+    _locationEventStream.cancel();
   }
 }
 

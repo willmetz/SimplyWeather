@@ -5,6 +5,7 @@ import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/DataLayer/ExtendedForecast.dart';
 import 'package:ost_weather/DataLayer/WeatherLocale.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
+import 'package:ost_weather/Service/LocationService.dart';
 import 'package:ost_weather/Service/WeatherService.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
 import 'package:ost_weather/Utils/IconUtils.dart';
@@ -13,10 +14,19 @@ class HomeBloc implements Bloc {
   final _controller = StreamController<Home>();
   AppPreferences _appPreferences;
   WeatherService _weatherService;
+  LocationService _locationService;
+  StreamSubscription<Location> _locationEventStream;
 
-  HomeBloc(AppPreferences appPreferences, WeatherService weatherService) {
+  HomeBloc(AppPreferences appPreferences, WeatherService weatherService, LocationService locationService) {
     _appPreferences = appPreferences;
     _weatherService = weatherService;
+    _locationService = locationService;
+
+    _locationEventStream = _locationService.locationChangeEventStream.listen((location) {
+      if (location != null) {
+        fetchHomeData(providedLocation: location);
+      }
+    });
   }
 
   Stream<Home> get stream => _controller.stream;
@@ -28,9 +38,19 @@ class HomeBloc implements Bloc {
     return data;
   }
 
-  void currentWeather() async {
+  /*
+   * Retrieves the home data either based on the location passed in
+   * or based on the location available.
+   * 
+   * @param: providedLocation - optionally provided location
+   */
+  void fetchHomeData({Location providedLocation}) async {
     Home home = Home();
-    Location location = await _getCurrentLocation();
+    Location location = providedLocation;
+
+    if (location == null) {
+      location = await _getCurrentLocation();
+    }
 
     if (location == null || location.latitude == null || location.longitude == null) {
       home.homeState = HomeState.noLocationAvailable;
@@ -38,10 +58,10 @@ class HomeBloc implements Bloc {
       return;
     }
 
-    home.homeState = HomeState.gettingLatestWeather;
-    _controller.sink.add(home);
+    String cityName = await _getCityName(location);
+    final ExtendedForecast extendedForecast = await _weatherService.getExtendedForecast(location);
 
-    HomeData homeData = await _getForecast(location);
+    HomeData homeData = _createHomeData(cityName, extendedForecast);
 
     if (homeData.forecastWindows == null || homeData.forecastWindows.length == 0) {
       home.homeState = HomeState.errorRetrievingConditions;
@@ -54,12 +74,15 @@ class HomeBloc implements Bloc {
     _controller.sink.add(home);
   }
 
-  Future<HomeData> _getForecast(Location location) async {
+  Future<String> _getCityName(Location location) async {
     final WeatherLocale weatherLocale = await _weatherService.getWeatherLocale(location);
-    final ExtendedForecast extendedForecast = await _weatherService.getExtendedForecast(location);
 
+    return weatherLocale.locationInformation.cityName;
+  }
+
+  HomeData _createHomeData(String cityName, ExtendedForecast forecast) {
     //get the current conditions for today
-    final CurrentConditions currentConditions = extendedForecast.currentConditions;
+    final CurrentConditions currentConditions = forecast.currentConditions;
 
     //find all forecast details for today
     //final today = DateTime.now();
@@ -71,7 +94,7 @@ class HomeBloc implements Bloc {
     //seed hi and low temps
     homeData.hiForDay = -999;
     homeData.lowForDay = 999;
-    homeData.city = weatherLocale.locationInformation.cityName;
+    homeData.city = cityName;
 
     homeData.currentTemperature = currentConditions.currentTemperature;
     homeData.currentWindSpeed = currentConditions.windSpeed;
@@ -83,7 +106,7 @@ class HomeBloc implements Bloc {
 
     homeData.feelsLikeTemperature = currentConditions.feelsLikeTemperature;
 
-    extendedForecast.hourlyForecast.forEach((hourlyWindow) {
+    forecast.hourlyForecast.forEach((hourlyWindow) {
       //get the forecasted time in local time (given in UTC)
       DateTime ft = DateTime.fromMillisecondsSinceEpoch(hourlyWindow.timeStampUTC * 1000, isUtc: false);
 
@@ -116,6 +139,7 @@ class HomeBloc implements Bloc {
   @override
   void dispose() {
     _controller.close();
+    _locationEventStream.cancel();
   }
 }
 

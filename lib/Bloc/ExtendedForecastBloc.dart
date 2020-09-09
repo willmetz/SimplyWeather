@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:ost_weather/Bloc/Bloc.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
+import 'package:ost_weather/Service/LocationService.dart';
 import 'package:ost_weather/Service/WeatherService.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
 import 'package:ost_weather/Utils/IconUtils.dart';
@@ -10,10 +11,16 @@ import 'package:ost_weather/Utils/IconUtils.dart';
 class ExtendedForecastBloc extends Bloc {
   final WeatherService _weatherService;
   final AppPreferences _appPreferences;
+  final LocationService _locationService;
+  StreamSubscription<Location> _locationEventStream;
 
   final _controller = StreamController<ExtendedForecastData>();
 
-  ExtendedForecastBloc(this._weatherService, this._appPreferences);
+  ExtendedForecastBloc(this._weatherService, this._appPreferences, this._locationService) {
+    _locationService.locationChangeEventStream.listen((location) {
+      getExtendedForecast(providedLocation: location);
+    });
+  }
 
   Stream<ExtendedForecastData> get stream => _controller.stream;
 
@@ -24,11 +31,15 @@ class ExtendedForecastBloc extends Bloc {
     return extendedForecastData;
   }
 
-  void getExtendedForecast() async {
+  void getExtendedForecast({Location providedLocation}) async {
     ExtendedForecastData extendedForecastData = ExtendedForecastData();
     extendedForecastData.extendedForecast = new List();
 
-    Location location = await _appPreferences.getLocation();
+    Location location = providedLocation;
+
+    if (location == null) {
+      await _appPreferences.getLocation();
+    }
 
     if (location != null) {
       extendedForecastData.extendedForecastState = ExtendedForecastState.loading;
@@ -76,7 +87,8 @@ class ExtendedForecastBloc extends Bloc {
   }
 
   String getWindDirection(int windDirectionDegrees) {
-    if (windDirectionDegrees >= 0 && windDirectionDegrees < 22.5 || windDirectionDegrees > 337.5 && windDirectionDegrees <= 360) {
+    if (windDirectionDegrees >= 0 && windDirectionDegrees < 22.5 ||
+        windDirectionDegrees > 337.5 && windDirectionDegrees <= 360) {
       return "E";
     } else if (windDirectionDegrees >= 22.5 && windDirectionDegrees < 67.5) {
       return "NE";
@@ -98,6 +110,7 @@ class ExtendedForecastBloc extends Bloc {
   @override
   void dispose() {
     _controller.close();
+    _locationEventStream.cancel();
   }
 }
 

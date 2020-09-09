@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 
@@ -10,6 +12,10 @@ class LocationService {
 
   //private constructor to ensure this class is only created here
   LocationService._internal();
+
+  // ignore: close_sinks, as the subscribers will close when disposed this is always available
+  final _locationChangeEventController = StreamController<Location>.broadcast();
+  Stream<Location> get locationChangeEventStream => _locationChangeEventController.stream;
 
   Geolocator _geolocator = Geolocator();
 
@@ -24,7 +30,9 @@ class LocationService {
           .catchError((error) => _geolocator.getLastKnownPosition());
 
       if (position != null) {
-        return Location.fromGeoInfo(position.latitude, position.longitude);
+        final location = Location.fromGeoInfo(position.latitude, position.longitude);
+        _locationChangeEventController.sink.add(location);
+        return location;
       }
     } catch (PlatformException) {}
 

@@ -4,6 +4,7 @@ import 'package:ost_weather/Bloc/bloc_provider.dart';
 import 'package:ost_weather/DataLayer/WeatherApiClient.dart';
 import 'package:ost_weather/Database/ExtendedForecastDAO.dart';
 import 'package:ost_weather/Database/WeatherLocaleDAO.dart';
+import 'package:ost_weather/Service/LocationService.dart';
 import 'package:ost_weather/Service/WeatherService.dart';
 import 'package:ost_weather/UI/Widgets/CurrentConditionsWidget.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
@@ -12,14 +13,14 @@ import 'Widgets/ForecastWidgets.dart';
 import 'Widgets/HourlyConditionsCell.dart';
 
 class HomeScreen extends StatelessWidget {
-  final HomeBloc homeBloc =
-      HomeBloc(AppPreferences(), WeatherService(WeatherApiClient(), ExtendedForecastDAO(), WeatherLocaleDAO()));
+  final HomeBloc homeBloc = HomeBloc(
+      AppPreferences(), WeatherService(WeatherApiClient(), ExtendedForecastDAO(), WeatherLocaleDAO()), LocationService());
   HomeScreen() {
     WidgetsBinding.instance.addPostFrameCallback(_onLayoutDone);
   }
 
   void _onLayoutDone(_) {
-    homeBloc.currentWeather();
+    homeBloc.fetchHomeData();
   }
 
   @override
@@ -39,8 +40,8 @@ class HomeScreen extends StatelessWidget {
                     case HomeState.currentConditionsAvailable:
                       return _showCurrentWeather(results.homeData);
                     case HomeState.errorRetrievingConditions:
-                      return errorWithRetry("Unable to retrieve weather at this time, please try again.", "Try Again",
-                          homeBloc.currentWeather);
+                      return errorWithRetry(
+                          "Unable to retrieve weather at this time, please try again.", "Try Again", homeBloc.fetchHomeData);
                     case HomeState.init:
                       return _init();
                     case HomeState.gettingLatestWeather:

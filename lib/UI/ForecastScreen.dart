@@ -4,6 +4,7 @@ import 'package:ost_weather/Bloc/bloc_provider.dart';
 import 'package:ost_weather/DataLayer/WeatherApiClient.dart';
 import 'package:ost_weather/Database/ExtendedForecastDAO.dart';
 import 'package:ost_weather/Database/WeatherLocaleDAO.dart';
+import 'package:ost_weather/Service/LocationService.dart';
 import 'package:ost_weather/Service/WeatherService.dart';
 import 'package:ost_weather/UI/Widgets/DailyForecastDetailsTitleWidget.dart';
 import 'package:ost_weather/Utils/AppPreference.dart';
@@ -13,7 +14,7 @@ import 'Widgets/ForecastWidgets.dart';
 
 class ForecastScreen extends StatelessWidget {
   final ExtendedForecastBloc _forecastBloc = new ExtendedForecastBloc(
-      WeatherService(WeatherApiClient(), ExtendedForecastDAO(), WeatherLocaleDAO()), AppPreferences());
+      WeatherService(WeatherApiClient(), ExtendedForecastDAO(), WeatherLocaleDAO()), AppPreferences(), LocationService());
 
   ForecastScreen() {
     WidgetsBinding.instance.addPostFrameCallback(_onLayoutDone);

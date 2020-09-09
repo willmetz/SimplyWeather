@@ -1,4 +1,4 @@
-import 'package:ost_weather/Bloc/RadarBlock.dart';
+import 'package:ost_weather/Bloc/RadarBloc.dart';
 import 'package:ost_weather/DataLayer/Location.dart';
 import 'package:test/test.dart';
 
@@ -34,7 +34,8 @@ class RadarBlocTest {
     _mockAppPreferences.location = Future<Location>.value(Location.fromGeoInfo(41.85, -87.65));
 
     RadarData expectedData = RadarData();
-    expectedData.precipitationOverlayTiles.add("https://tile.openweathermap.org/map/precipitation_new/12/1050/1522.png?appid=test");
+    expectedData.precipitationOverlayTiles
+        .add("https://tile.openweathermap.org/map/precipitation_new/12/1050/1522.png?appid=test");
     expectedData.state = RadarState.dataReady;
 
     expectLater(bloc.stream, emits(RadarDataMatcher(expectedData)));
@@ -67,7 +68,8 @@ class RadarDataMatcher extends Matcher {
     return tileDataMatches && actualData.state == expectedData.state;
   }
 
-  Description describeMismatch(dynamic item, Description mismatchDescription, Map<dynamic, dynamic> matchState, bool verbose) {
+  Description describeMismatch(
+      dynamic item, Description mismatchDescription, Map<dynamic, dynamic> matchState, bool verbose) {
     return mismatchDescription.add("Has actual emitted radar data: '$actualData'\nexpected = $expectedData");
   }
 }
