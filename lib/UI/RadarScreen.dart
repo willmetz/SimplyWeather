@@ -125,7 +125,7 @@ class RadarScreen extends StatelessWidget {
                                   min: 4,
                                   max: 16,
                                   value: zoom.toDouble(),
-                                  divisions: 6,
+                                  divisions: 12,
                                   label: zoom.toString(),
                                   onChanged: (double value) {
                                     _bloc.updateZoom(value.toInt());

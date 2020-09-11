@@ -14,7 +14,7 @@ class RadarBloc implements Bloc {
   final LocationService _locationService;
   final _controller = StreamController<RadarData>();
   final _zoomController = StreamController<int>();
-  final defaultZoom = 12;
+  final defaultZoom = 2;
   RadarData _data;
 
   Stream<RadarData> get stream => _controller.stream;
