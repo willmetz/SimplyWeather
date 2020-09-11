@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:ost_weather/Bloc/RadarBloc.dart';
-import 'package:ost_weather/Bloc/bloc_provider.dart';
-import 'package:ost_weather/Service/LocationService.dart';
-import 'package:ost_weather/UI/Widgets/ForecastWidgets.dart';
-import 'package:ost_weather/UI/Widgets/LocationPainter.dart';
-import 'package:ost_weather/UI/Widgets/RadarLegend.dart';
-import 'package:ost_weather/UI/Widgets/RadarOverlayWidget.dart';
-import 'package:ost_weather/Utils/AppPreference.dart';
+import 'package:simply_weather/Bloc/RadarBloc.dart';
+import 'package:simply_weather/Bloc/bloc_provider.dart';
+import 'package:simply_weather/Service/LocationService.dart';
+import 'package:simply_weather/UI/Widgets/ForecastWidgets.dart';
+import 'package:simply_weather/UI/Widgets/LocationPainter.dart';
+import 'package:simply_weather/UI/Widgets/RadarLegend.dart';
+import 'package:simply_weather/UI/Widgets/RadarOverlayWidget.dart';
+import 'package:simply_weather/Utils/AppPreference.dart';
 
 class RadarScreen extends StatelessWidget {
   final RadarBloc _bloc = RadarBloc(AppPreferences(), LocationService());

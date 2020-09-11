@@ -1,5 +1,5 @@
-import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/DataLayer/WeatherLocale.dart';
+import 'package:simply_weather/DataLayer/Location.dart';
+import 'package:simply_weather/DataLayer/WeatherLocale.dart';
 import 'package:sembast/sembast.dart';
 
 import 'WeatherDatabase.dart';

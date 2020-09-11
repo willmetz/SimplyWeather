@@ -1,9 +1,9 @@
-import 'package:ost_weather/DataLayer/ExtendedForecast.dart';
-import 'package:ost_weather/DataLayer/WeatherLocale.dart';
-import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/DataLayer/WeatherApiClient.dart';
-import 'package:ost_weather/Database/ExtendedForecastDAO.dart';
-import 'package:ost_weather/Database/WeatherLocaleDAO.dart';
+import 'package:simply_weather/DataLayer/ExtendedForecast.dart';
+import 'package:simply_weather/DataLayer/WeatherLocale.dart';
+import 'package:simply_weather/DataLayer/Location.dart';
+import 'package:simply_weather/DataLayer/WeatherApiClient.dart';
+import 'package:simply_weather/Database/ExtendedForecastDAO.dart';
+import 'package:simply_weather/Database/WeatherLocaleDAO.dart';
 
 class WeatherService {
   static final Map<String, WeatherService> _cache = <String, WeatherService>{};

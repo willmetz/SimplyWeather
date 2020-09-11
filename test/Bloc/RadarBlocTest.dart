@@ -1,5 +1,5 @@
-import 'package:ost_weather/Bloc/RadarBloc.dart';
-import 'package:ost_weather/DataLayer/Location.dart';
+import 'package:simply_weather/Bloc/RadarBloc.dart';
+import 'package:simply_weather/DataLayer/Location.dart';
 import 'package:test/test.dart';
 
 import '../Mocks/MockAppPreferences.dart';

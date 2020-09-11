@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:intl/intl.dart';
-import 'package:ost_weather/Bloc/Bloc.dart';
-import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/Service/LocationService.dart';
-import 'package:ost_weather/Service/WeatherService.dart';
-import 'package:ost_weather/Utils/AppPreference.dart';
-import 'package:ost_weather/Utils/IconUtils.dart';
+import 'package:simply_weather/Bloc/Bloc.dart';
+import 'package:simply_weather/DataLayer/Location.dart';
+import 'package:simply_weather/Service/LocationService.dart';
+import 'package:simply_weather/Service/WeatherService.dart';
+import 'package:simply_weather/Utils/AppPreference.dart';
+import 'package:simply_weather/Utils/IconUtils.dart';
 
 class ExtendedForecastBloc extends Bloc {
   final WeatherService _weatherService;
@@ -38,7 +38,7 @@ class ExtendedForecastBloc extends Bloc {
     Location location = providedLocation;
 
     if (location == null) {
-      await _appPreferences.getLocation();
+      location = await _appPreferences.getLocation();
     }
 
     if (location != null) {
@@ -110,7 +110,7 @@ class ExtendedForecastBloc extends Bloc {
   @override
   void dispose() {
     _controller.close();
-    _locationEventStream.cancel();
+    _locationEventStream?.cancel();
   }
 }
 

@@ -1,5 +1,5 @@
-import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/Utils/AppPreference.dart';
+import 'package:simply_weather/DataLayer/Location.dart';
+import 'package:simply_weather/Utils/AppPreference.dart';
 
 class MockAppPreferences implements AppPreferences {
   Future<Location> location;

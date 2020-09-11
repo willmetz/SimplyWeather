@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:geolocator/geolocator.dart';
-import 'package:ost_weather/DataLayer/Location.dart';
+import 'package:simply_weather/DataLayer/Location.dart';
 
 class LocationService {
   static final LocationService _instance = LocationService._internal();

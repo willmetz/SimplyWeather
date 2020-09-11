@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:intl/intl.dart';
-import 'package:ost_weather/Bloc/Bloc.dart';
-import 'package:ost_weather/DataLayer/ExtendedForecast.dart';
-import 'package:ost_weather/DataLayer/WeatherLocale.dart';
-import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/Service/LocationService.dart';
-import 'package:ost_weather/Service/WeatherService.dart';
-import 'package:ost_weather/Utils/AppPreference.dart';
-import 'package:ost_weather/Utils/IconUtils.dart';
+import 'package:simply_weather/Bloc/Bloc.dart';
+import 'package:simply_weather/DataLayer/ExtendedForecast.dart';
+import 'package:simply_weather/DataLayer/WeatherLocale.dart';
+import 'package:simply_weather/DataLayer/Location.dart';
+import 'package:simply_weather/Service/LocationService.dart';
+import 'package:simply_weather/Service/WeatherService.dart';
+import 'package:simply_weather/Utils/AppPreference.dart';
+import 'package:simply_weather/Utils/IconUtils.dart';
 
 class HomeBloc implements Bloc {
   final _controller = StreamController<Home>();

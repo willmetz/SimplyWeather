@@ -1,6 +1,6 @@
-import 'package:ost_weather/DataLayer/ExtendedForecast.dart';
-import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/Database/WeatherDatabase.dart';
+import 'package:simply_weather/DataLayer/ExtendedForecast.dart';
+import 'package:simply_weather/DataLayer/Location.dart';
+import 'package:simply_weather/Database/WeatherDatabase.dart';
 import 'package:sembast/sembast.dart';
 
 class ExtendedForecastDAO {

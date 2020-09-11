@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ost_weather/Bloc/ExtendedForecastBloc.dart';
+import 'package:simply_weather/Bloc/ExtendedForecastBloc.dart';
 
 class DailyForecastDetailsCellWidget extends StatelessWidget {
   final DaysForecast _forecast;

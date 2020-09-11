@@ -1,4 +1,4 @@
-# ost_weather
+# simply_weather
 
 A new Flutter project.
 

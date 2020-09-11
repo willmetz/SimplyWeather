@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:ost_weather/Bloc/LocationBloc.dart';
-import 'package:ost_weather/Bloc/bloc_provider.dart';
-import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/DataLayer/WeatherApiClient.dart';
-import 'package:ost_weather/Database/ExtendedForecastDAO.dart';
-import 'package:ost_weather/Database/WeatherLocaleDAO.dart';
-import 'package:ost_weather/Service/LocationService.dart';
-import 'package:ost_weather/Service/WeatherService.dart';
-import 'package:ost_weather/UI/Widgets/ForecastWidgets.dart';
-import 'package:ost_weather/Utils/AppPreference.dart';
+import 'package:simply_weather/Bloc/LocationBloc.dart';
+import 'package:simply_weather/Bloc/bloc_provider.dart';
+import 'package:simply_weather/DataLayer/Location.dart';
+import 'package:simply_weather/DataLayer/WeatherApiClient.dart';
+import 'package:simply_weather/Database/ExtendedForecastDAO.dart';
+import 'package:simply_weather/Database/WeatherLocaleDAO.dart';
+import 'package:simply_weather/Service/LocationService.dart';
+import 'package:simply_weather/Service/WeatherService.dart';
+import 'package:simply_weather/UI/Widgets/ForecastWidgets.dart';
+import 'package:simply_weather/Utils/AppPreference.dart';
 
 class LocationScreen extends StatelessWidget {
   final LocationBloc _locationBloc = LocationBloc(

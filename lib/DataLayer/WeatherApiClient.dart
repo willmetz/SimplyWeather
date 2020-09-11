@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:ost_weather/Config/WeatherConfig.dart';
-import 'package:ost_weather/DataLayer/ExtendedForecast.dart';
-import 'package:ost_weather/DataLayer/WeatherLocale.dart';
+import 'package:simply_weather/Config/WeatherConfig.dart';
+import 'package:simply_weather/DataLayer/ExtendedForecast.dart';
+import 'package:simply_weather/DataLayer/WeatherLocale.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:ost_weather/DataLayer/Location.dart';
+import 'package:simply_weather/DataLayer/Location.dart';
 
 class WeatherApiClient {
   final _path = "/data/2.5";

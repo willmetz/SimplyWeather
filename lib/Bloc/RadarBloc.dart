@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:ost_weather/Bloc/Bloc.dart';
-import 'package:ost_weather/Config/WeatherConfig.dart';
-import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/Service/LocationService.dart';
-import 'package:ost_weather/Utils/AppPreference.dart';
+import 'package:simply_weather/Bloc/Bloc.dart';
+import 'package:simply_weather/Config/WeatherConfig.dart';
+import 'package:simply_weather/DataLayer/Location.dart';
+import 'package:simply_weather/Service/LocationService.dart';
+import 'package:simply_weather/Utils/AppPreference.dart';
 import 'dart:math';
 
-import 'package:ost_weather/Utils/MathUtils.dart';
+import 'package:simply_weather/Utils/MathUtils.dart';
 
 class RadarBloc implements Bloc {
   final AppPreferences _appPreferences;
@@ -49,10 +49,10 @@ class RadarBloc implements Bloc {
     Location location = providedLocation;
 
     if (location == null) {
-      await _appPreferences.getLocation();
+      location = await _appPreferences.getLocation();
     }
 
-    int zoom = await _appPreferences.getZoom(_defaultZoom);
+    int zoom = await _appPreferences.getZoom(defaultZoom);
 
     if (location != null) {
       Tile centerTile = getCenterTile(zoom, location.latitude, location.longitude);
@@ -119,7 +119,7 @@ class RadarBloc implements Bloc {
   void dispose() {
     _controller.close();
     _zoomController.close();
-    _locationEventStream.cancel();
+    _locationEventStream?.cancel();
   }
 }
 

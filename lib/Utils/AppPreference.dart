@@ -1,4 +1,4 @@
-import 'package:ost_weather/DataLayer/Location.dart';
+import 'package:simply_weather/DataLayer/Location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppPreferences {
@@ -31,7 +31,7 @@ class AppPreferences {
 
     double long = sharedPreferences.getDouble(_longitudeKey);
     double lat = sharedPreferences.getDouble(_latitudeKey);
-s
+
     if (lat == null && long == null) {
       return null;
     } else {

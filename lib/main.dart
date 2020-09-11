@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ost_weather/Bloc/LocationBloc.dart';
-import 'package:ost_weather/Bloc/bloc_provider.dart';
-import 'package:ost_weather/DataLayer/Location.dart';
-import 'package:ost_weather/UI/HomeScreen.dart';
-import 'package:ost_weather/UI/LocationScreen.dart';
-import 'package:ost_weather/UI/RadarScreen.dart';
-import 'package:ost_weather/Utils/AppPreference.dart';
+import 'package:simply_weather/UI/HomeScreen.dart';
+import 'package:simply_weather/UI/LocationScreen.dart';
+import 'package:simply_weather/UI/RadarScreen.dart';
 
 import 'UI/ForecastScreen.dart';
 
