@@ -5,6 +5,7 @@ import 'package:simply_weather/DataLayer/Location.dart';
 import 'package:simply_weather/DataLayer/WeatherLocale.dart';
 import 'package:simply_weather/Service/LocationService.dart';
 import 'package:simply_weather/Service/WeatherService.dart';
+import 'package:simply_weather/Utils/AppLogger.dart';
 import 'package:simply_weather/Utils/AppPreference.dart';
 
 class LocationBloc implements Bloc {
@@ -39,6 +40,7 @@ class LocationBloc implements Bloc {
   }
 
   Future<bool> updateLocation() async {
+    AppLogger().d("Updating Location");
     _locationController.sink.add(LocationData.loading());
 
     Location location = await _locationService.getCurrentLocation();

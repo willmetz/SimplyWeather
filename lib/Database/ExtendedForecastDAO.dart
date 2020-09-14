@@ -2,6 +2,7 @@ import 'package:simply_weather/DataLayer/ExtendedForecast.dart';
 import 'package:simply_weather/DataLayer/Location.dart';
 import 'package:simply_weather/Database/WeatherDatabase.dart';
 import 'package:sembast/sembast.dart';
+import 'package:simply_weather/Utils/AppLogger.dart';
 
 class ExtendedForecastDAO {
   static const String FOLDER_NAME = "extendedForecast";
@@ -19,9 +20,14 @@ class ExtendedForecastDAO {
     final snapshot = await _extendedForecastFolder.record(_forecastKey(location)).get(await _db);
 
     if (snapshot != null && snapshot.length > 0) {
+      AppLogger().d("Found extended forecast record for location");
       return ExtendedForecast.fromJson(snapshot);
     } else {
-      //TODO clear out DB
+      AppLogger().d("No record found for location, attempting to clearing extended forecast DB");
+      Database db = await _db;
+      int deletedRecords = await _extendedForecastFolder.delete(db);
+
+      AppLogger().d("Cleared $deletedRecords from DB");
     }
 
     return null;

@@ -7,6 +7,7 @@ import 'package:simply_weather/DataLayer/WeatherLocale.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:simply_weather/DataLayer/Location.dart';
+import 'package:simply_weather/Utils/AppLogger.dart';
 
 class WeatherApiClient {
   final _path = "/data/2.5";
@@ -58,12 +59,17 @@ class WeatherApiClient {
 
     final uri = Uri.https(_host, _path + "/onecall", queryParams);
 
+    AppLogger().d("API call for $uri:");
+
     final response = await http.get(uri);
 
+    AppLogger().d("API call response from $uri:");
+
     if (response.statusCode == 200) {
+      AppLogger().d(response.body);
       return ExtendedForecast.fromJson(json.decode(response.body));
     } else {
-      log("Failed to get extended forecast: ${response.reasonPhrase}");
+      AppLogger().e("Failed to get extended forecast: ${response.reasonPhrase}");
       return null;
     }
   }

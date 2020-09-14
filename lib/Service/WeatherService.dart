@@ -4,6 +4,7 @@ import 'package:simply_weather/DataLayer/Location.dart';
 import 'package:simply_weather/DataLayer/WeatherApiClient.dart';
 import 'package:simply_weather/Database/ExtendedForecastDAO.dart';
 import 'package:simply_weather/Database/WeatherLocaleDAO.dart';
+import 'package:simply_weather/Utils/AppLogger.dart';
 
 class WeatherService {
   static final Map<String, WeatherService> _cache = <String, WeatherService>{};
@@ -48,21 +49,25 @@ class WeatherService {
     WeatherLocale locale = await _weatherLocaleDAO.getWeatherLocale(location);
 
     if (locale != null && locale.retrievedAtTimeStamp != null) {
+      AppLogger().d("Found locale for location in DB");
       DateTime retrievedAt = DateTime.fromMillisecondsSinceEpoch(locale.retrievedAtTimeStamp);
 
-      if (retrievedAt != null && retrievedAt.add(Duration(minutes: 15)).isAfter(DateTime.now())) {
+      if (retrievedAt != null && retrievedAt.add(Duration(hours: 5)).isAfter(DateTime.now())) {
+        AppLogger().d("Locale not expired");
         return locale;
       }
     }
 
     //cache is empty or expired, retrieve new data
     if (location != null && location.latitude != null && location.longitude != null) {
+      AppLogger().d("Locale not available in DB, attempting to get locale via API");
       locale = await _weatherApiClient.getWeatherLocale(location);
     }
 
     if (locale != null) {
       locale.retrievedAtTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
+      AppLogger().d("Locale successfully retrieved, saving to DB");
       //save to the db
       await _weatherLocaleDAO.addWeatherLocale(locale, location);
     }
