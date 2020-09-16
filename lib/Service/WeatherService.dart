@@ -12,8 +12,13 @@ class WeatherService {
   final WeatherApiClient _weatherApiClient;
   final ExtendedForecastDAO _extendedForecastDAO;
   final WeatherLocaleDAO _weatherLocaleDAO;
+  bool _extendedForecastRequestInProgress;
+  bool _localeRequestInProgress;
 
-  WeatherService._internal(this._extendedForecastDAO, this._weatherApiClient, this._weatherLocaleDAO);
+  WeatherService._internal(this._extendedForecastDAO, this._weatherApiClient, this._weatherLocaleDAO) {
+    _extendedForecastRequestInProgress = false;
+    _localeRequestInProgress = false;
+  }
 
   factory WeatherService(
       WeatherApiClient weatherApiClient, ExtendedForecastDAO extendedForecastDAO, WeatherLocaleDAO hourlyForecstDAO) {
@@ -22,12 +27,22 @@ class WeatherService {
   }
 
   Future<ExtendedForecast> getExtendedForecast(Location location) async {
+    int loopLimit = 50;
+    while (loopLimit > 0 && _extendedForecastRequestInProgress) {
+      AppLogger().d("Extended forecast request in progress, awaiting completion");
+      loopLimit--;
+      await Future.delayed(Duration(milliseconds: 100));
+    }
+
+    _extendedForecastRequestInProgress = true;
+
     ExtendedForecast extendedForecast = await _extendedForecastDAO.getForecast(location);
 
     if (extendedForecast != null) {
       DateTime retrievedAt = DateTime.fromMillisecondsSinceEpoch(extendedForecast.retrievedAtTimeStamp);
 
       if (retrievedAt.add(Duration(minutes: 30)).isAfter(DateTime.now())) {
+        _extendedForecastRequestInProgress = false;
         return extendedForecast;
       }
     }
@@ -42,10 +57,20 @@ class WeatherService {
       await _extendedForecastDAO.addForecast(extendedForecast, location);
     }
 
+    _extendedForecastRequestInProgress = false;
+
     return extendedForecast;
   }
 
   Future<WeatherLocale> getWeatherLocale(Location location) async {
+    int loopLimit = 50;
+    while (loopLimit > 0 && _localeRequestInProgress) {
+      AppLogger().d("Locale Request in progress, awaiting completion");
+      loopLimit--;
+      await Future.delayed(Duration(milliseconds: 100));
+    }
+    _localeRequestInProgress = true;
+
     WeatherLocale locale = await _weatherLocaleDAO.getWeatherLocale(location);
 
     if (locale != null && locale.retrievedAtTimeStamp != null) {
@@ -54,6 +79,7 @@ class WeatherService {
 
       if (retrievedAt != null && retrievedAt.add(Duration(hours: 5)).isAfter(DateTime.now())) {
         AppLogger().d("Locale not expired");
+        _localeRequestInProgress = false;
         return locale;
       }
     }
@@ -72,6 +98,7 @@ class WeatherService {
       await _weatherLocaleDAO.addWeatherLocale(locale, location);
     }
 
+    _localeRequestInProgress = false;
     return locale;
   }
 }
