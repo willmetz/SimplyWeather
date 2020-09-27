@@ -60,7 +60,7 @@ class ForecastScreen extends StatelessWidget {
           itemCount: data.extendedForecast.length,
           itemBuilder: (context, index) {
             return Card(
-              color: Colors.grey[300],
+              color: Color.fromRGBO(0, 0x69, 0xC0, 1),
               child: Column(
                 children: <Widget>[
                   DailyForecastDetailsTitleWidget(data.extendedForecast[index]),

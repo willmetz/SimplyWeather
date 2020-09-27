@@ -30,9 +30,12 @@ class CurrentConditionsWidget extends StatelessWidget {
                           children: <Widget>[
                             Container(
                                 padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                child: Text("${homeData.currentTemperature.toInt()}\u00b0")),
+                                child: Text(
+                                  "${homeData.currentTemperature.toInt()}\u00b0",
+                                  style: TextStyle(decorationThickness: 2),
+                                )),
                             Container(
-                              child: Text("${homeData.currentWindSpeed} mph"),
+                              child: Text("${homeData.currentWindSpeed} mph", style: TextStyle(decorationThickness: 2)),
                               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                             )
                           ],
@@ -75,12 +78,15 @@ class CurrentConditionsWidget extends StatelessWidget {
                   Container(
                     child: Text(
                       "Feels Like: ${homeData.feelsLikeTemperature.toInt()}\u00b0",
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 18, decorationThickness: 2),
                       textAlign: TextAlign.end,
                     ),
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
                   ),
-                  Text("${homeData.hiForDay.toInt()}\u00b0/${homeData.lowForDay.toInt()}\u00b0")
+                  Text(
+                    "${homeData.hiForDay.toInt()}\u00b0/${homeData.lowForDay.toInt()}\u00b0",
+                    style: TextStyle(decorationThickness: 2, fontSize: 16),
+                  )
                 ],
               ),
             ),

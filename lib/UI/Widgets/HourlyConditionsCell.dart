@@ -11,11 +11,23 @@ class HourlyConditionsCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        color: Colors.grey[300],
+        color: Color.fromRGBO(0, 0x69, 0xC0, 1),
         child: Row(
           children: <Widget>[
-            Expanded(flex: 1, child: Center(child: Text("${_forecastWindow.windowStartHour}"))),
-            Expanded(flex: 1, child: Center(child: Text("${_forecastWindow.temp.toInt()}\u00b0"))),
+            Expanded(
+                flex: 1,
+                child: Center(
+                    child: Text(
+                  "${_forecastWindow.windowStartHour}",
+                  style: TextStyle(fontSize: 18, decorationThickness: 2, color: Colors.white),
+                ))),
+            Expanded(
+                flex: 1,
+                child: Center(
+                    child: Text(
+                  "${_forecastWindow.temp.toInt()}\u00b0",
+                  style: TextStyle(fontSize: 20, decorationThickness: 2, color: Colors.white),
+                ))),
             Expanded(
                 flex: 1,
                 child: Center(

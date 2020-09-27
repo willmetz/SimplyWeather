@@ -10,6 +10,9 @@ import 'dart:math';
 import 'package:simply_weather/Utils/MathUtils.dart';
 
 class RadarBloc implements Bloc {
+  static const int ZOOM_MAX = 18;
+  static const int ZOOM_MIN = 2;
+
   final AppPreferences _appPreferences;
   final LocationService _locationService;
   final _controller = StreamController<RadarData>();
@@ -36,6 +39,12 @@ class RadarBloc implements Bloc {
 
   void fetchPreviousZoom() async {
     int zoom = await _appPreferences.getZoom(defaultZoom);
+
+    if (zoom < ZOOM_MIN) {
+      zoom = ZOOM_MIN;
+    } else if (zoom > ZOOM_MAX) {
+      zoom = ZOOM_MAX;
+    }
     _zoomController.sink.add(zoom);
   }
 
@@ -69,29 +78,17 @@ class RadarBloc implements Bloc {
   }
 
   List<MapWithRadarTile> generateAllTilesFromCenterTile(Tile centerTile, RadarData currentData) {
-    List<MapWithRadarTile> tiles = new List(9);
+    List<MapWithRadarTile> tiles = new List();
 
     int zoom = centerTile.zoom;
 
     //the order of the tiles will be upper left to bottom right
-    Tile tile = Tile(zoom, centerTile.xTileCoordinate - 1, centerTile.yTileCoordinate - 1);
-    tiles[0] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileCoordinate, centerTile.yTileCoordinate - 1);
-    tiles[1] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileCoordinate + 1, centerTile.yTileCoordinate - 1);
-    tiles[2] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileCoordinate - 1, centerTile.yTileCoordinate);
-    tiles[3] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileCoordinate, centerTile.yTileCoordinate);
-    tiles[4] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileCoordinate + 1, centerTile.yTileCoordinate);
-    tiles[5] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileCoordinate - 1, centerTile.yTileCoordinate + 1);
-    tiles[6] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileCoordinate, centerTile.yTileCoordinate + 1);
-    tiles[7] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
-    tile = Tile(zoom, centerTile.xTileCoordinate + 1, centerTile.yTileCoordinate + 1);
-    tiles[8] = MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile);
+    for (int yTileOffset = -1; yTileOffset < 2; yTileOffset++) {
+      for (int xTileOffset = -1; xTileOffset < 2; xTileOffset++) {
+        Tile tile = Tile(zoom, centerTile.xTileCoordinate + xTileOffset, centerTile.yTileCoordinate + yTileOffset);
+        tiles.add(MapWithRadarTile(_createMapTileUrl(zoom, tile), _createTileUrl(zoom, tile), tile));
+      }
+    }
 
     return tiles;
   }

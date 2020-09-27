@@ -8,6 +8,6 @@ class DailyForecastDetailsTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text(_forecast.day));
+    return Center(child: Text(_forecast.day, style: TextStyle(color: Colors.white)));
   }
 }

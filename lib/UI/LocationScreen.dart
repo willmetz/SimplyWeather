@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simply_weather/Bloc/LocationBloc.dart';
 import 'package:simply_weather/Bloc/bloc_provider.dart';
-import 'package:simply_weather/DataLayer/Location.dart';
 import 'package:simply_weather/DataLayer/WeatherApiClient.dart';
 import 'package:simply_weather/Database/ExtendedForecastDAO.dart';
 import 'package:simply_weather/Database/WeatherLocaleDAO.dart';
@@ -39,19 +38,22 @@ class LocationScreen extends StatelessWidget {
                       Container(
                         color: Colors.blue,
                         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                          Center(child: currentLocationInformation(locationData)),
                           Center(
                               child: Container(
-                                  padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                                  padding: EdgeInsets.fromLTRB(0, 40, 0, 10),
                                   child: RaisedButton(
-                                    child: Text("Update Location"),
+                                    color: Color.fromRGBO(0, 0x69, 0xC0, 1),
+                                    child: Text(
+                                      "Update Location",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                     onPressed: () async {
                                       if (locationData.locationState() != LocationState.Loading) {
                                         await _locationBloc.updateLocation();
                                       }
                                     },
                                   ))),
-                          Center(child: currentLocationInformation(locationData)),
-                          RaisedButton(child: Text("Done"), onPressed: () => Navigator.pop(context))
                         ]),
                       ),
                       Visibility(
@@ -67,9 +69,17 @@ class LocationScreen extends StatelessWidget {
     Widget myWidget;
 
     if (locationData?.locationState() == LocationState.LocationKnown) {
-      myWidget = Text("Current location is ${locationData.locationName()}");
+      myWidget = Text(
+        locationData.locationName(),
+        style: TextStyle(fontSize: 25),
+        textAlign: TextAlign.center,
+      );
     } else {
-      myWidget = Text("Location is unknown.");
+      myWidget = Text(
+        "Location is unknown.",
+        style: TextStyle(fontSize: 25, color: Colors.red),
+        textAlign: TextAlign.center,
+      );
     }
 
     return myWidget;

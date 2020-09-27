@@ -115,21 +115,26 @@ class RadarScreen extends StatelessWidget {
                     child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
+                          padding: const EdgeInsets.fromLTRB(0, 30, 0, 30),
                           child: StreamBuilder<int>(
                               stream: _bloc.zoomStream,
                               initialData: _bloc.defaultZoom,
                               builder: (context, snapshot) {
                                 int zoom = snapshot.data;
-                                return Slider(
-                                  min: 4,
-                                  max: 16,
-                                  value: zoom.toDouble(),
-                                  divisions: 12,
-                                  label: zoom.toString(),
-                                  onChanged: (double value) {
-                                    _bloc.updateZoom(value.toInt());
-                                  },
+                                return Column(
+                                  children: [
+                                    Slider(
+                                      min: RadarBloc.ZOOM_MIN.toDouble(),
+                                      max: RadarBloc.ZOOM_MAX.toDouble(),
+                                      value: zoom.toDouble(),
+                                      divisions: RadarBloc.ZOOM_MAX - RadarBloc.ZOOM_MIN,
+                                      label: zoom.toString(),
+                                      onChanged: (double value) {
+                                        _bloc.updateZoom(value.toInt());
+                                      },
+                                    ),
+                                    Text("Zoom"),
+                                  ],
                                 );
                               }),
                         )),
