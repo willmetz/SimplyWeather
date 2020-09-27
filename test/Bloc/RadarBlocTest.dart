@@ -3,6 +3,7 @@ import 'package:simply_weather/DataLayer/Location.dart';
 import 'package:test/test.dart';
 
 import '../Mocks/MockAppPreferences.dart';
+import '../Mocks/MockLocationService.dart';
 
 void main() {
   RadarBlocTest bloc = RadarBlocTest();
@@ -14,11 +15,10 @@ void main() {
 
 class RadarBlocTest {
   MockAppPreferences _mockAppPreferences = new MockAppPreferences();
+  MockLocationService _mockLocationService = new MockLocationService();
 
   void testCenterTileCalculation() {
-    RadarBloc bloc = RadarBloc(
-      _mockAppPreferences,
-    );
+    RadarBloc bloc = RadarBloc(_mockAppPreferences, _mockLocationService);
     _mockAppPreferences.location = Future<Location>.value(Location.fromGeoInfo(41.85, -87.65));
 
     Tile centerTile = bloc.getCenterTile(12, 41.85, -87.65);
@@ -28,19 +28,44 @@ class RadarBlocTest {
   }
 
   void givenValidLocationThenStreamShouldEmitExpectedRadarData() async {
-    RadarBloc bloc = RadarBloc(
-      _mockAppPreferences,
-    );
+    RadarBloc bloc = RadarBloc(_mockAppPreferences, _mockLocationService);
     _mockAppPreferences.location = Future<Location>.value(Location.fromGeoInfo(41.85, -87.65));
+    _mockAppPreferences.zoomLevel = Future<int>.value(12);
+
+    double centerTileX = 1050;
+    double centerTileY = 1522;
+    int zoom = 12;
 
     RadarData expectedData = RadarData();
-    expectedData.precipitationOverlayTiles
-        .add("https://tile.openweathermap.org/map/precipitation_new/12/1050/1522.png?appid=test");
+
+    for (int i = -1; i < 2; i++) {
+      Tile tile = Tile(zoom, centerTileX + i, centerTileY - 1);
+      expectedData.layeredTiles.add(MapWithRadarTile(
+          "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/$zoom/${tile.xTileNumber}/${tile.yTileNumber}",
+          "https://tile.openweathermap.org/map/precipitation_new/$zoom/${tile.xTileNumber}/${tile.yTileNumber}.png",
+          tile));
+    }
+
+    for (int i = -1; i < 2; i++) {
+      Tile tile = Tile(zoom, centerTileX + i, centerTileY);
+      expectedData.layeredTiles.add(MapWithRadarTile(
+          "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/$zoom/${tile.xTileNumber}/${tile.yTileNumber}",
+          "https://tile.openweathermap.org/map/precipitation_new/$zoom/${tile.xTileNumber}/${tile.yTileNumber}.png",
+          tile));
+    }
+
+    for (int i = -1; i < 2; i++) {
+      Tile tile = Tile(zoom, centerTileX + i, centerTileY + 1);
+      expectedData.layeredTiles.add(MapWithRadarTile(
+          "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/$zoom/${tile.xTileNumber}/${tile.yTileNumber}",
+          "https://tile.openweathermap.org/map/precipitation_new/$zoom/${tile.xTileNumber}/${tile.yTileNumber}.png",
+          tile));
+    }
     expectedData.state = RadarState.dataReady;
 
     expectLater(bloc.stream, emits(RadarDataMatcher(expectedData)));
 
-    bloc.getLatestRadar(12);
+    bloc.getLatestRadar();
   }
 }
 
@@ -61,8 +86,10 @@ class RadarDataMatcher extends Matcher {
 
     bool tileDataMatches = true;
 
-    for (int i = 0; i < expectedData.precipitationOverlayTiles.length; i++) {
-      tileDataMatches &= actualData.precipitationOverlayTiles[i].startsWith(expectedData.precipitationOverlayTiles[i]);
+    for (int i = 0; i < expectedData.layeredTiles.length; i++) {
+      tileDataMatches &= actualData.layeredTiles[i].precipitationUrlForTile
+          .startsWith(expectedData.layeredTiles[i].precipitationUrlForTile);
+      tileDataMatches &= actualData.layeredTiles[i].mapUrlForTile.startsWith(expectedData.layeredTiles[i].mapUrlForTile);
     }
 
     return tileDataMatches && actualData.state == expectedData.state;

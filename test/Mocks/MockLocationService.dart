@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:simply_weather/DataLayer/Location.dart';
 import 'package:simply_weather/Service/LocationService.dart';
 
@@ -10,6 +12,5 @@ class MockLocationService implements LocationService {
   }
 
   @override
-  // TODO: implement locationChangeEventStream
-  Stream<Location> get locationChangeEventStream => throw UnimplementedError();
+  Stream<Location> get locationChangeEventStream => StreamController<Location>.broadcast().stream;
 }
