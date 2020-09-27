@@ -32,6 +32,9 @@ class ExtendedForecastBloc extends Bloc {
   }
 
   void getExtendedForecast({Location providedLocation}) async {
+    if (_controller.isClosed) {
+      return;
+    }
     ExtendedForecastData extendedForecastData = ExtendedForecastData();
     extendedForecastData.extendedForecast = new List();
 

@@ -55,6 +55,10 @@ class RadarBloc implements Bloc {
   }
 
   void getLatestRadar({Location providedLocation}) async {
+    if (_controller.isClosed) {
+      return;
+    }
+
     Location location = providedLocation;
 
     if (location == null) {

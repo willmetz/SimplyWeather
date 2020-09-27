@@ -45,6 +45,10 @@ class HomeBloc implements Bloc {
    * @param: providedLocation - optionally provided location
    */
   void fetchHomeData({Location providedLocation}) async {
+    if (_controller.isClosed) {
+      return;
+    }
+
     Home home = Home();
     Location location = providedLocation;
 
