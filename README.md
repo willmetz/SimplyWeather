@@ -1,16 +1,21 @@
 # simply_weather
 
-A new Flutter project.
+A flutter project built to help understand how flutter works for mobile application development and to help figure out design patterns.
+
+Currently the app is architected as follows:
+
+
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+In order to run this application you will need to create a file with the following constants:
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+const String OPEN_WEATHER_API_KEY = "";
+const String MAPBOX_API_KEY = "";
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+These keys will need to be populated with keys created from the following sources (don't worry this is all free):
+Open Weather: https://home.openweathermap.org/users/sign_in
+Map Box: https://account.mapbox.com/
+
+These API's are used to get weather and map information show in the app.
