@@ -25,3 +25,5 @@ doc/api/
 .flutter-plugins-dependencies
 
 lib/Config/WeatherConfig.dart
+
+ios/Flutter/.last_build_id
