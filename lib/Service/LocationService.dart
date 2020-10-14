@@ -17,17 +17,11 @@ class LocationService {
   final _locationChangeEventController = StreamController<Location>.broadcast();
   Stream<Location> get locationChangeEventStream => _locationChangeEventController.stream;
 
-  Geolocator _geolocator = Geolocator();
-
   Future<Location> getCurrentLocation() async {
-    _geolocator.forceAndroidLocationManager = true;
-
     try {
-      Position position = await _geolocator
-          .getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.medium, locationPermissionLevel: GeolocationPermission.locationWhenInUse)
+      Position position = await getCurrentPosition(desiredAccuracy: LocationAccuracy.medium)
           .timeout(Duration(seconds: 10))
-          .catchError((error) => _geolocator.getLastKnownPosition());
+          .catchError((error) => getLastKnownPosition());
 
       if (position != null) {
         final location = Location.fromGeoInfo(position.latitude, position.longitude);

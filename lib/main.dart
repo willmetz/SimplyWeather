@@ -54,9 +54,9 @@ class WeatherAppState extends State<WeatherApp> {
 
   List<BottomNavigationBarItem> getBottomNavBarItems() {
     return [
-      new BottomNavigationBarItem(icon: Icon(Icons.satellite), title: Text("Radar")),
-      BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
-      BottomNavigationBarItem(icon: Icon(Icons.calendar_today), title: Text("Forecast"))
+      new BottomNavigationBarItem(icon: Icon(Icons.satellite), label: "Radar"),
+      BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+      BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: "Forecast")
     ];
   }
 

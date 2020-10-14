@@ -13,7 +13,9 @@ class RadarLegend extends StatelessWidget {
       children: [
         Container(
           height: _height,
-          decoration: BoxDecoration(gradient: LinearGradient(colors: _colors.map((e) => e.color).toList(), stops: _colors.map((e) => e.stop.toDouble()).toList())),
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: _colors.map((e) => e.color).toList(), stops: _colors.map((e) => e.stop.toDouble()).toList())),
         ),
         Align(child: Text(_label))
       ],
