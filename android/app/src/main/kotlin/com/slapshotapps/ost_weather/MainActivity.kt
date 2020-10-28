@@ -1,4 +1,4 @@
-package com.example.simply_weather
+package com.slapshotapps.simply_weather
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
